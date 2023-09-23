@@ -3,6 +3,7 @@
 #include <vector>
 #include <set>
 #include <ctime>
+//#include <fstream>
 
 using std::string;
 using std::vector;
@@ -27,7 +28,7 @@ public:
 		day = today->tm_mday;
 	}
 
-	string toString() {
+	string toString() const {
 		string result;
 		
 		if (day < 10) result += '0';
@@ -42,7 +43,7 @@ public:
 		return result;
 	}
 
-	bool operator < (const Date& other) {
+	bool operator < (const Date& other) const {
 		if (this->year < other.year) return true;
 		if (this->year > other.year) return false;
 
@@ -64,7 +65,7 @@ public:
 	Person(const string& name = "Name", const string& surname = "Surname", const string& position = "Unknown")
 		: name(name), surname(surname), position(position) {};
 
-	string toString() {
+	string toString() const {
 		return name + ' ' + surname + ' ' + position;
 	}
 
@@ -76,114 +77,283 @@ public:
 class Image {
 	string filePath;
 	string description;
+	bool isEmpty;
 
-	void show() {
-
+public:
+	bool empty() const {
+		return isEmpty;
+	}
+	void show() const {
+		if (!description.empty()) {
+			cout << "Image: " << description;
+		}
+		if (!filePath.empty())
+			cout << "\nPath: " << filePath;
+		else
+			cout << "Image not found";
 	}
 };
 
+enum class DocType {
+	Unknown,
+	Application,
+	VacationApplication,
+	Report,
+	Article,
+	Blueprint,
+	AssemblyBlueprint,
+	ThreeDimensionalBlueprint
+};
+
+//class FileSystem {
+//private:
+//	DocType docType;
+//
+//public:
+//	FileSystem(DocType type)
+//		: docType(type) { };
+//
+//	void setType(DocType type) {
+//		docType = type;
+//	}
+//	DocType getType() {
+//		return docType;
+//	}
+//
+//	void save(Document* doc, const string& filePath) {
+//		std::ofstream file(filePath);
+//		if (!file.is_open())
+//			throw std::runtime_error("Couldn't save file");
+//
+//		switch (docType) {
+//		case DocType::Application: {
+//
+//			break;
+//		}
+//		case DocType::VacationApplication: {
+//
+//			break;
+//		}
+//		case DocType::Report: {
+//
+//			break;
+//		}
+//		case DocType::Article: {
+//
+//			break;
+//		}
+//		case DocType::Blueprint: {
+//
+//			break;
+//		}
+//		case DocType::AssemblyBlueprint: {
+//
+//			break;
+//		}
+//		case DocType::ThreeDimensionalBlueprint: {
+//
+//			break;
+//		}
+//		default: {
+//			throw std::invalid_argument("Invalid file type specified");
+//		}
+//		}
+//	}
+//};
+
+
 class Document {
 protected:
+	const DocType docType;
 	string title;
-	Date creationDate;
+	const Date creationDate;
 	Date editDate;
 	set<Person> authors;
-	bool isSigned = false;
+	bool hasSignature = false;
 
-	set<Document*> references;
+	set<string> references;
+
 public:
-	Document(const string& title = "untitled", const Date& creationDate = { 1,1,2023 })
-		: title(title), creationDate(creationDate), editDate(creationDate) {}
+	Document(const string& title = "untitled", DocType docType = DocType::Unknown)
+		: title(title), creationDate(Date()), editDate(creationDate), docType(docType) {}
 
 	void updateEditDate() {
 		editDate = Date();
 	}
 
 	void sign() {
-		isSigned = true;
+		hasSignature = true;
 		updateEditDate();
 	}
 	void unsign() {
-		isSigned = false;
+		hasSignature = false;
 		updateEditDate();
+	}
+	bool isSigned() const {
+		return hasSignature;
 	}
 
 	void addAuthor(const Person& author) {
 		authors.emplace(author);
 		updateEditDate();
 	}
+	void removeAuthor(const Person& author) {
+		authors.erase(author);
+		updateEditDate();
+	}
 	void clearAuthors() {
 		authors.clear();
 		updateEditDate();
+	}
+
+	void addReference(const string& reference) {
+		references.emplace(reference);
+	}
+	void removeReference(const string& reference) {
+		references.erase(reference);
+	}
+
+	string getTitle() const {
+		return title;
 	}
 	void setTitle(const string& title) {
 		this->title = title;
 		updateEditDate();
 	}
 
-	virtual void show() = 0;
-	virtual void save(string filePath) = 0;
+	virtual void showHeader() const {
+		cout << title << '\n';
+		cout << "Created: " << creationDate.toString() << '\n';
+		cout << "Edited: " << editDate.toString() << '\n';
+		cout << "Author:\n";
+		for (const auto& p : authors)
+			cout << p.toString() << '\n';
+	}
+	virtual void showReferences() const {
+		if (!references.empty()) {
+			cout << "References:\n";
+			for (const auto& p : references)
+				cout << p << '\n';
+		}
+	}
+	virtual void show() const = 0;
+	//virtual void saveHeader(const string& filePath) const {
+	//	std::ofstream os(filePath, std::ios::out);
+	//	if (!os.is_open())
+	//		throw std::runtime_error("Couldn't open file");
 
-	bool operator < (const Document& other) {
+	//	os << (int)docType << title << creationDate.toString()
+	//		<< editDate.toString() << authors <<
+	//}
+	//virtual void saveReferences(const string& filePath) const {
+
+	//}
+	//virtual void save(string filePath) const = 0;
+
+	bool operator < (const Document& other) const {
 		return this->creationDate < other.creationDate;
 	}
 };
 
-class Application : Document {
-private:
+class Application : public Document {
+protected:
 	string request;
 
 public:
-	void show() override {
+	Application()
+		: Document("untitled", DocType::Application) { };
 
-	}
-	void save(string filePath) override {
+	Application(const string& title, const string& request = "Not specified")
+		: Document(title, DocType::Application), request(request) {	};
 
+	void show() const override {
+		showHeader();
+
+		cout << '\n' << request << '\n';
+		
+		showReferences();
 	}
+	//void save(string filePath) const override {	
+	//	//FileSystem system(DocType::Application);
+	//	//system.save((Document*)this, filePath);
+	//}
 };
 
-class VacationApplication : Application {
+class VacationApplication : public Application {
 private:
 	set<pair<Date, Date>> vacationDates;
 
 public:
-	void show() override {
+	void show() const override {
+		showHeader();
 
-	}
-	void save(string filePath) override {
+		cout << '\n' << request << '\n';
 
+		if (!vacationDates.empty()) {
+			cout << "Wanted vacation dates:\n";
+			for (const auto& d : vacationDates)
+				cout << d.first.toString() << " - " << d.second.toString() << '\n';
+		}
+
+		showReferences();
 	}
+	/*void save(string filePath) const override {
+
+	}*/
 };
 
-class Report : Document {
+class Report : public Document {
 private:
 	string subject;
 	string institution;
 	string text;
 
 public:
-	void show() override {
-	}
-	void save(string filePath) override {
+	void show() const override {
+		showHeader();
 
+		cout << '\n' << "Subject: " << subject << '\n'
+			<< "Institution: " << institution << "\n\n";
+
+		cout << text;
+
+		cout << '\n';
+
+		showReferences();
 	}
+	/*void save(string filePath) const override {
+
+	}*/
 };
 
-class Article : Document {
+class Article : public Document {
 private:
 	string topic;
 	vector<pair<string, Image>> paragraphs;
 
 public:
-	void show() override {
+	void show() const override {
+		showHeader();
 
-	}
-	void save(string filePath) override {
+		cout << '\n' << "Topic: " << topic << "\n\n";
 
+		for (const auto& p : paragraphs) {
+			cout << p.first << '\n';
+
+			if(!p.second.empty())
+				p.second.show();
+
+			cout << '\n';
+		}
+
+		showReferences();
 	}
+	/*void save(string filePath) const override {
+
+	}*/
 };
 
-class Blueprint : Document {
+class Blueprint : public Document {
 protected:
 	string itemName;
 	set<Person> revisor;
@@ -192,25 +362,50 @@ protected:
 	set<Image*> images;
 
 public:
-	void show() override {
+	void showBlueprintHeader() const {
+		cout << "Item name: " << itemName << '\n';
 
+		cout << "Revised:\n";
+		if (revisor.empty())
+			cout << "Nobody";
+		else
+			for (const auto& p : revisor) {
+				cout << p.toString() << '\n';
+			}
+		cout << "Revision date: " << revisionDate.toString() << '\n';
 	}
-	void save(string filePath) override {
+	void showContent() const {
+		for (const auto& i : images)
+			i->show();
+	}
+	void show() const override {
+		showHeader();
+		showBlueprintHeader();
 
+		showReferences();
 	}
+	/*void save(string filePath) const override {
+
+	}*/
 };
 
-class AssemblyBlueprint : Blueprint {
+class AssemblyBlueprint : public Blueprint {
 protected:
 	set<Blueprint*> elements;
 
 public:
-	void show() override {
+	void show() const override {
+		showHeader();
+		showBlueprintHeader();
 
-	}
-	void save(string filePath) override {
+		for (const auto e : elements)
+			e->showContent();
 
+		showReferences();
 	}
+	/*void save(string filePath) const override {
+
+	}*/
 };
 
 enum class ModelRenderer {
@@ -219,7 +414,7 @@ enum class ModelRenderer {
 	RayTracing
 };
 
-class ThreeDimensionalBlueprint : Blueprint {
+class ThreeDimensionalBlueprint : public Blueprint {
 private:
 	long long origin[3] = { 0,0,0 };
 	string modelPath;
@@ -227,11 +422,46 @@ private:
 
 	ModelRenderer renderer = ModelRenderer::VRay;
 
+	void renderPreview(ModelRenderer renderer) const {
+		switch (renderer) {
+		case ModelRenderer::VRay: {
+			cout << "--- Some cool render with VRay ---";
+			break;
+		}
+		case ModelRenderer::Corona: {
+			cout << "--- Some cool render with Corona ---";
+			break;
+		}
+		case ModelRenderer::RayTracing: {
+			cout << "--- Some cool render with RT ---";
+			break;
+		}
+		default: {
+			throw std::invalid_argument("No available renderer specified");
+		}
+		}
+	}
+
 public:
+	void show() const override {
+		showHeader();
+		showBlueprintHeader();
+
+		cout << "Path to model: " << modelPath << '\n';
+		cout << "Path to materials: " << materialsPath << '\n';
+		
+		cout << '\n';
+		renderPreview(renderer);
+		cout << '\n';
+
+		showReferences();
+	}
+	/*void save(string filePath) const override {
+
+	}*/
 };
 
 int main() {
-	Date a;
-	cout << a.toString();
+	
 	return 0;
 }
