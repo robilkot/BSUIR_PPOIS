@@ -11,9 +11,7 @@ private:
 	uint32_t year = 2023;
 
 public:
-
 	Date(uint8_t day, uint8_t month, uint32_t year);
-
 	Date();
 
 	std::string toString() const;

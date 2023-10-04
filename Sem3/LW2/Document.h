@@ -21,7 +21,6 @@ protected:
 	set<string> references;
 
 public:
-	
 	Document(const string& title);
 	void updateEditDate();
 

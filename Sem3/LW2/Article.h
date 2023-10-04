@@ -19,6 +19,6 @@ public:
 
 	Article(const string& title, const string& topic, const vector<pair<string, Image>>& paragraphs);
 	void addParagraph(const pair<string, Image>& par);
-	void removeParagraph(const vector<pair<string, Image>>::iterator it);
+	void removeParagraph(const pair<string, Image>& par);
 	void show() const override;
 };

@@ -14,18 +14,6 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-//namespace Microsoft {
-//	namespace VisualStudio {
-//		namespace CppUnitTestFramework {
-//			template <> static std::wstring ToString(const CantorSet& set)
-//			{
-//				string converted = set.toString();
-//				return std::wstring(converted.begin(), converted.end());
-//			}
-//		}
-//	}
-//}
-
 namespace DocumentSystemUnitTest
 {
 	TEST_CLASS(DateTest)
@@ -125,11 +113,50 @@ namespace DocumentSystemUnitTest
 			Assert::AreEqual((string)"title", test.getTitle());
 		}
 
+		TEST_METHOD(ReportCreation1)
+		{
+			Report test;
+			Assert::AreEqual((string)"untitled", test.getTitle());
+		}
+		TEST_METHOD(ReportCreation2)
+		{
+			Report test("title", "Subject", "BSUIR", "text of report");
+			Assert::AreEqual((string)"title", test.getTitle());
+		}
+
+		TEST_METHOD(ThreeDimensionalBlueprintCreation1)
+		{
+			ThreeDimensionalBlueprint test;
+			Assert::AreEqual((string)"title", test.getTitle());
+		}
+		TEST_METHOD(ThreeDimensionalBlueprintCreation2)
+		{
+			double origin[3] = { 1,2,3 };
+			ThreeDimensionalBlueprint test(origin, "model", "materials");
+
+			Assert::AreEqual((string)"Untitled", test.getTitle());
+		}
+		
 	};
 
 	TEST_CLASS(DocumentSystemEdit)
 	{
 	public:
+		TEST_METHOD(DocumentComparison)
+		{
+			set<Document> testSet;
+
+			Application testApplication("C");
+			Article testArticle("B");
+			Report testReport("A");
+
+			testSet.emplace(testApplication);
+			testSet.emplace(testArticle);
+			testSet.emplace(testReport);
+
+			Assert::AreEqual((string)"A", testSet.begin()->getTitle());
+		}
+
 		TEST_METHOD(DocumentShowHeader)
 		{
 			Application application;
@@ -144,6 +171,15 @@ namespace DocumentSystemUnitTest
 			application.showReferences();
 		}
 
+		TEST_METHOD(DocumentSetTitle)
+		{
+			Application application;
+
+			application.setTitle("Test title");
+
+			Assert::AreEqual((string)"Test title", application.getTitle());
+		}
+
 		TEST_METHOD(DocumentSign)
 		{
 			Application application;
@@ -152,7 +188,6 @@ namespace DocumentSystemUnitTest
 
 			Assert::IsTrue(application.isSigned());
 		}
-
 		TEST_METHOD(DocumentUnsign)
 		{
 			Application application;
@@ -173,7 +208,6 @@ namespace DocumentSystemUnitTest
 			Person person2("Dan", "Is", "Super");
 			application.addAuthor(person2);
 		}
-
 		TEST_METHOD(DocumentRemoveAuthor)
 		{
 			Application application;
@@ -186,7 +220,12 @@ namespace DocumentSystemUnitTest
 
 			application.removeAuthor(person);
 		}
+		TEST_METHOD(DocumentRemoveNonExistingAuthor)
+		{
+			Application application;
 
+			application.removeAuthor(Person());
+		}
 		TEST_METHOD(DocumentClearAuthors)
 		{
 			Application application;
@@ -200,6 +239,47 @@ namespace DocumentSystemUnitTest
 			application.clearAuthors();
 		}
 
+		TEST_METHOD(DocumentAddReference)
+		{
+			Application application;
+
+			application.addReference("Ein sehr wichtiges Dokument");
+			application.addReference("Ein weiteres wichtiges Dokument");
+		}
+		TEST_METHOD(DocumentRemoveReference)
+		{
+			Application application;
+
+			application.addReference("Ein sehr wichtiges Dokument");
+			application.addReference("Ein weiteres wichtiges Dokument");
+
+			application.removeReference("Ein sehr wichtiges Dokument");
+		}
+		TEST_METHOD(DocumentRemoveNonExistingReference)
+		{
+			Application application;
+
+			application.removeReference("Ein sehr wichtiges Dokument");
+		}
+
+		TEST_METHOD(BlueprintAddPage)
+		{
+			Blueprint application;
+
+			application.addPage(Image());
+		}
+		TEST_METHOD(BlueprintRemovePage)
+		{
+			Blueprint application;
+
+			application.removePage(Image());
+		}
+		TEST_METHOD(BlueprintClearContent)
+		{
+			Blueprint application;
+
+			application.clearContent();
+		}
 	};
 
 	TEST_CLASS(ShowTest)
@@ -241,6 +321,11 @@ namespace DocumentSystemUnitTest
 		TEST_METHOD(AssemblyBlueprintShow)
 		{
 			AssemblyBlueprint test;
+			test.show();
+		}
+		TEST_METHOD(ThreeDimensionalBlueprintShow)
+		{
+			ThreeDimensionalBlueprint test;
 			test.show();
 		}
 	};

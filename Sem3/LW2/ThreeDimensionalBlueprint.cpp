@@ -1,5 +1,12 @@
 #include "ThreeDimensionalBlueprint.h"
 
+ThreeDimensionalBlueprint::ThreeDimensionalBlueprint() {}
+ThreeDimensionalBlueprint::ThreeDimensionalBlueprint(const double const* origin, string modelPath = "Empty model", string materialsPath = "Empty materials")
+	: modelPath(modelPath), materialsPath(materialsPath) {
+	for(char i = 0; i < 3; i++)
+		this->origin[i] = origin[i];
+}
+
 void ThreeDimensionalBlueprint::renderPreview(ModelRenderer renderer) const {
 	switch (renderer) {
 	case ModelRenderer::VRay: {

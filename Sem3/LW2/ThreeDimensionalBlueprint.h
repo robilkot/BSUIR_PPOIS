@@ -22,9 +22,10 @@ private:
 
 	ModelRenderer renderer = ModelRenderer::VRay;
 
-	void renderPreview(ModelRenderer renderer) const;
-
 public:
+	void renderPreview(ModelRenderer renderer) const;
+	ThreeDimensionalBlueprint();
+	ThreeDimensionalBlueprint(const double const* origin, string modelPath, string materialsPath);
 	void show() const override;
 };
 

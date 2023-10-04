@@ -8,10 +8,13 @@ Article::Article(const string& title, const string& topic = "Not specified", con
 
 void Article::addParagraph(const pair<string, Image>& par) {
 	paragraphs.emplace_back(par);
+	updateEditDate();
 }
 
-void Article::removeParagraph(const vector<pair<string, Image>>::iterator it) {
+void Article::removeParagraph(const pair<string, Image>& par) {
+	auto it = std::find(paragraphs.begin(), paragraphs.end(), par);
 	paragraphs.erase(it);
+	updateEditDate();
 }
 
 void Article::show() const {

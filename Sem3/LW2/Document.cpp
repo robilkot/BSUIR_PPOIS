@@ -1,6 +1,6 @@
 #include "Document.h"
 
-Document::Document(const string& title = "untitled")
+Document::Document(const string& title)
 	: title(title), creationDate(Date()), editDate(creationDate) {}
 
 void Document::updateEditDate() {
@@ -34,9 +34,11 @@ void Document::clearAuthors() {
 
 void Document::addReference(const string& reference) {
 	references.emplace(reference);
+	updateEditDate();
 }
 void Document::removeReference(const string& reference) {
 	references.erase(reference);
+	updateEditDate();
 }
 
 string Document::getTitle() const {
