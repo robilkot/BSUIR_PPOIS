@@ -127,14 +127,14 @@ namespace DocumentSystemUnitTest
 		TEST_METHOD(ThreeDimensionalBlueprintCreation1)
 		{
 			ThreeDimensionalBlueprint test;
-			Assert::AreEqual((string)"title", test.getTitle());
+			Assert::AreEqual((string)"untitled", test.getTitle());
 		}
 		TEST_METHOD(ThreeDimensionalBlueprintCreation2)
 		{
 			double origin[3] = { 1,2,3 };
 			ThreeDimensionalBlueprint test(origin, "model", "materials");
 
-			Assert::AreEqual((string)"Untitled", test.getTitle());
+			Assert::AreEqual((string)"untitled", test.getTitle());
 		}
 		
 	};
@@ -144,17 +144,9 @@ namespace DocumentSystemUnitTest
 	public:
 		TEST_METHOD(DocumentComparison)
 		{
-			set<Document> testSet;
-
-			Application testApplication("C");
-			Article testArticle("B");
-			Report testReport("A");
-
-			testSet.emplace(testApplication);
-			testSet.emplace(testArticle);
-			testSet.emplace(testReport);
-
-			Assert::AreEqual((string)"A", testSet.begin()->getTitle());
+			Article testArticle("A");
+			Report testReport("B");
+			Assert::IsTrue(testArticle < testReport);
 		}
 
 		TEST_METHOD(DocumentShowHeader)
@@ -260,6 +252,42 @@ namespace DocumentSystemUnitTest
 			Application application;
 
 			application.removeReference("Ein sehr wichtiges Dokument");
+		}
+
+		TEST_METHOD(ArticleAddParagraph)
+		{
+			Article test;
+
+			test.addParagraph({ "text", Image() });
+		}
+
+		TEST_METHOD(ArticleRemoveParagraph)
+		{
+			Article test;
+			pair<string, Image> par = { "text", Image() };
+			
+			test.addParagraph(par);
+			test.removeParagraph(par);
+		}
+
+		TEST_METHOD(AssemblyBlueprintAddItem)
+		{
+			AssemblyBlueprint test;
+			Blueprint bp1, bp2;
+
+			test.addItem(&bp1);
+			test.addItem(&bp2);
+		}
+
+		TEST_METHOD(AssemblyBlueprintRemoveItem)
+		{
+			AssemblyBlueprint test;
+			Blueprint bp1, bp2;
+
+			test.addItem(&bp1);
+			test.addItem(&bp2);
+
+			test.removeItem(&bp1);
 		}
 
 		TEST_METHOD(BlueprintAddPage)

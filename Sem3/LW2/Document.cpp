@@ -66,5 +66,5 @@ void Document::showReferences() const {
 }
 
 bool Document::operator < (const Document& other) const {
-	return this->creationDate < other.creationDate;
+	return this->title < other.title;
 }

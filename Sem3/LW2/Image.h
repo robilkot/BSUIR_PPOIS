@@ -19,4 +19,6 @@ public:
 	void setPath(const string& filePath);
 	bool empty() const;
 	void show() const;
+	bool operator<(const Image& other) const;
+	bool operator==(const Image& other) const;
 };

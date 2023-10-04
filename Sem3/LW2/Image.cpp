@@ -25,3 +25,10 @@ void Image::show() const {
 	else
 		cout << "Image not found";
 }
+
+bool Image::operator < (const Image& other) const {
+	return this->filePath > other.filePath;
+}
+bool Image::operator == (const Image& other) const {
+	return this->filePath == other.filePath && this->description == other.description;
+}

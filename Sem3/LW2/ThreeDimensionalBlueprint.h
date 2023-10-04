@@ -25,7 +25,7 @@ private:
 public:
 	void renderPreview(ModelRenderer renderer) const;
 	ThreeDimensionalBlueprint();
-	ThreeDimensionalBlueprint(const double const* origin, string modelPath, string materialsPath);
+	ThreeDimensionalBlueprint(const double* origin, string modelPath, string materialsPath);
 	void show() const override;
 };
 
