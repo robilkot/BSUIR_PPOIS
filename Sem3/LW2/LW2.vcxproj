@@ -131,7 +131,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Article.cpp" />
+    <ClCompile Include="AssemblyBlueprint.cpp" />
+    <ClCompile Include="Blueprint.cpp" />
+    <ClCompile Include="Date.cpp" />
+    <ClCompile Include="Document.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="LW2.cpp" />
+    <ClCompile Include="Person.cpp" />
+    <ClCompile Include="Report.cpp" />
+    <ClCompile Include="ThreeDimensionalBlueprint.cpp" />
+    <ClCompile Include="VacationApplication.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Article.h" />
+    <ClInclude Include="AssemblyBlueprint.h" />
+    <ClInclude Include="Blueprint.h" />
+    <ClInclude Include="Date.h" />
+    <ClInclude Include="Document.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="Person.h" />
+    <ClInclude Include="Report.h" />
+    <ClInclude Include="ThreeDimensionalBlueprint.h" />
+    <ClInclude Include="VacationApplication.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
