@@ -131,7 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Request.cpp" />
     <ClCompile Include="Article.cpp" />
     <ClCompile Include="AssemblyBlueprint.cpp" />
     <ClCompile Include="Blueprint.cpp" />
@@ -141,10 +141,10 @@
     <ClCompile Include="Person.cpp" />
     <ClCompile Include="Report.cpp" />
     <ClCompile Include="ThreeDimensionalBlueprint.cpp" />
-    <ClCompile Include="VacationApplication.cpp" />
+    <ClCompile Include="VacationRequest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
+    <ClInclude Include="Request.h" />
     <ClInclude Include="Article.h" />
     <ClInclude Include="AssemblyBlueprint.h" />
     <ClInclude Include="Blueprint.h" />
@@ -155,7 +155,7 @@
     <ClInclude Include="Person.h" />
     <ClInclude Include="Report.h" />
     <ClInclude Include="ThreeDimensionalBlueprint.h" />
-    <ClInclude Include="VacationApplication.h" />
+    <ClInclude Include="VacationRequest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

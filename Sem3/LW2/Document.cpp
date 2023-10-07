@@ -54,14 +54,14 @@ void Document::showHeader() const {
 	cout << "Created: " << creationDate.toString() << '\n';
 	cout << "Edited: " << editDate.toString() << '\n';
 	cout << "Author:\n";
-	for (const auto& p : authors)
-		cout << p.toString() << '\n';
+	for (const auto& author : authors)
+		cout << author.toString() << '\n';
 }
 void Document::showReferences() const {
 	if (!references.empty()) {
 		cout << "References:\n";
-		for (const auto& p : references)
-			cout << p << '\n';
+		for (const auto& ref : references)
+			cout << ref << '\n';
 	}
 }
 

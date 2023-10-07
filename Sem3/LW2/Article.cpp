@@ -22,11 +22,11 @@ void Article::show() const {
 
 	cout << '\n' << "Topic: " << topic << "\n\n";
 
-	for (const auto& p : paragraphs) {
-		cout << p.first << '\n';
+	for (const auto& par : paragraphs) {
+		cout << par.first << '\n';
 
-		if (!p.second.empty())
-			p.second.show();
+		if (!par.second.empty())
+			par.second.show();
 
 		cout << '\n';
 	}

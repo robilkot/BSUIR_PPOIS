@@ -4,8 +4,8 @@
 #include "../Person.cpp"
 #include "../Image.cpp"
 #include "../Document.cpp"
-#include "../Application.cpp"
-#include "../VacationApplication.cpp"
+#include "../Request.cpp"
+#include "../VacationRequest.cpp"
 #include "../Article.cpp"
 #include "../Report.cpp"
 #include "../Blueprint.cpp"
@@ -43,22 +43,22 @@ namespace DocumentSystemUnitTest
 	public:
 		TEST_METHOD(PersonToString1)
 		{
-			Person person;
-			Assert::AreEqual((string)"Unknown Unknown Unemployed", person.toString());
+			Person people;
+			Assert::AreEqual((string)"Unknown Unknown Unemployed", people.toString());
 		}
 		TEST_METHOD(PersonToString2)
 		{
-			Person person("Tim", "Is", "Cool");
-			Assert::AreEqual((string)"Tim Is Cool", person.toString());
+			Person people("Tim", "Is", "Cool");
+			Assert::AreEqual((string)"Tim Is Cool", people.toString());
 		}
 		TEST_METHOD(PersonComparison)
 		{
-			Person person[5];
-			person[3].name = "aTest";
+			Person people[5];
+			people[3].name = "aTest";
 
 			set<Person> testSet;
-			for (const auto& p : person)
-				testSet.emplace(p);
+			for (const auto& person : people)
+				testSet.emplace(person);
 
 			Assert::AreEqual((string)"aTest", testSet.begin()->name);
 		}
@@ -97,20 +97,20 @@ namespace DocumentSystemUnitTest
 	TEST_CLASS(DocumentSystemCreation)
 	{
 	public:
-		TEST_METHOD(ApplicationCreation)
+		TEST_METHOD(RequestCreation)
 		{
 
-			Application test;
+			Request test;
 			Assert::AreEqual((string)"untitled", test.getTitle());
 		}
-		TEST_METHOD(VacationApplicationCreation1)
+		TEST_METHOD(VacationRequestCreation1)
 		{
-			VacationApplication test;
+			VacationRequest test;
 			Assert::AreEqual((string)"untitled", test.getTitle());
 		}
-		TEST_METHOD(VacationApplicationCreation2)
+		TEST_METHOD(VacationRequestCreation2)
 		{
-			VacationApplication test("title", { Date(2,3,2020), Date(6,3,2020) });
+			VacationRequest test("title", { Date(2,3,2020), Date(6,3,2020) });
 			Assert::AreEqual((string)"title", test.getTitle());
 		}
 
@@ -152,21 +152,21 @@ namespace DocumentSystemUnitTest
 
 		TEST_METHOD(DocumentShowHeader)
 		{
-			Application application;
+			Request application;
 
 			application.showHeader();
 		}
 
 		TEST_METHOD(DocumentShowReferences)
 		{
-			Application application;
+			Request application;
 
 			application.showReferences();
 		}
 
 		TEST_METHOD(DocumentSetTitle)
 		{
-			Application application;
+			Request application;
 
 			application.setTitle("Test title");
 
@@ -175,7 +175,7 @@ namespace DocumentSystemUnitTest
 
 		TEST_METHOD(DocumentSign)
 		{
-			Application application;
+			Request application;
 
 			application.sign();
 
@@ -183,7 +183,7 @@ namespace DocumentSystemUnitTest
 		}
 		TEST_METHOD(DocumentUnsign)
 		{
-			Application application;
+			Request application;
 
 			application.unsign();
 
@@ -192,56 +192,56 @@ namespace DocumentSystemUnitTest
 
 		TEST_METHOD(DocumentAddAuthor)
 		{
-			Application application;
+			Request application;
 
-			Person person("Tim", "Is", "Cool");
-			application.addAuthor(person);
-			application.addAuthor(person);
+			Person people("Tim", "Is", "Cool");
+			application.addAuthor(people);
+			application.addAuthor(people);
 
-			Person person2("Dan", "Is", "Super");
-			application.addAuthor(person2);
+			Person people2("Dan", "Is", "Super");
+			application.addAuthor(people2);
 		}
 		TEST_METHOD(DocumentRemoveAuthor)
 		{
-			Application application;
+			Request application;
 
-			Person person("Tim", "Is", "Cool");
-			application.addAuthor(person);
+			Person people("Tim", "Is", "Cool");
+			application.addAuthor(people);
 
-			Person person2("Dan", "Is", "Super");
-			application.addAuthor(person2);
+			Person people2("Dan", "Is", "Super");
+			application.addAuthor(people2);
 
-			application.removeAuthor(person);
+			application.removeAuthor(people);
 		}
 		TEST_METHOD(DocumentRemoveNonExistingAuthor)
 		{
-			Application application;
+			Request application;
 
 			application.removeAuthor(Person());
 		}
 		TEST_METHOD(DocumentClearAuthors)
 		{
-			Application application;
+			Request application;
 
-			Person person("Tim", "Is", "Cool");
-			application.addAuthor(person);
+			Person people("Tim", "Is", "Cool");
+			application.addAuthor(people);
 
-			Person person2("Dan", "Is", "Super");
-			application.addAuthor(person2);
+			Person people2("Dan", "Is", "Super");
+			application.addAuthor(people2);
 
 			application.clearAuthors();
 		}
 
 		TEST_METHOD(DocumentAddReference)
 		{
-			Application application;
+			Request application;
 
 			application.addReference("Ein sehr wichtiges Dokument");
 			application.addReference("Ein weiteres wichtiges Dokument");
 		}
 		TEST_METHOD(DocumentRemoveReference)
 		{
-			Application application;
+			Request application;
 
 			application.addReference("Ein sehr wichtiges Dokument");
 			application.addReference("Ein weiteres wichtiges Dokument");
@@ -250,7 +250,7 @@ namespace DocumentSystemUnitTest
 		}
 		TEST_METHOD(DocumentRemoveNonExistingReference)
 		{
-			Application application;
+			Request application;
 
 			application.removeReference("Ein sehr wichtiges Dokument");
 		}
@@ -313,15 +313,15 @@ namespace DocumentSystemUnitTest
 
 	TEST_CLASS(ShowTest)
 	{
-		TEST_METHOD(ApplicationShow)
+		TEST_METHOD(RequestShow)
 		{
-			Application test;
+			Request test;
 			test.show();
 		}
 
-		TEST_METHOD(VacationApplicationShow)
+		TEST_METHOD(VacationRequestShow)
 		{
-			VacationApplication test("title", { Date(2,3,2020), Date(6,3,2020) });
+			VacationRequest test("title", { Date(2,3,2020), Date(6,3,2020) });
 			test.show();
 		}
 

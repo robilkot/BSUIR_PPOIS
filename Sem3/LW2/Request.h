@@ -7,13 +7,13 @@
 using std::string;
 using std::cout;
 
-class Application : public Document {
+class Request : public Document {
 protected:
 	string request;
 
 public:
-	Application();
-	Application(const string& title, const string& request);
+	Request();
+	Request(const string& title, const string& request);
 
 	void show() const override;
 };
