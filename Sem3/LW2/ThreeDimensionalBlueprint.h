@@ -1,18 +1,13 @@
 #pragma once
 
 #include "Blueprint.h"
+#include "ModelRenderer.h"
 #include <iostream>
 #include <string>
 #include <set>
 
 using std::string;
 using std::cout;
-
-enum class ModelRenderer {
-	VRay,
-	Corona,
-	RayTracing
-};
 
 class ThreeDimensionalBlueprint : public Blueprint {
 private:

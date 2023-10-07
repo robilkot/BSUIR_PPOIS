@@ -11,6 +11,7 @@
 #include "../Blueprint.cpp"
 #include "../AssemblyBlueprint.cpp"
 #include "../ThreeDimensionalBlueprint.cpp"
+#include "../ModelRenderer.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

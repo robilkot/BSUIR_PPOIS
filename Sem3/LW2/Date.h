@@ -4,7 +4,7 @@
 #include <iostream>
 #include <ctime>
 
-class Date {
+class Date final {
 private:
 	uint8_t day = 1;
 	uint8_t month = 1;

@@ -7,7 +7,7 @@
 using std::string;
 using std::pair;
 
-class VacationApplication : public Application {
+class VacationApplication final : public Application {
 private:
 	pair<Date, Date> vacationDates;
 
