@@ -1,5 +1,6 @@
 #include "CppUnitTest.h"
 #include "../CantorSet.h"
+#include "../CantorSet.cpp"
 
 using std::string;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
