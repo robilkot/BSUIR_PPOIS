@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LW3
+namespace LW3.Logic
 {
     interface IUpdateable
     {

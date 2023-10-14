@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
-namespace LW3
+namespace LW3.Logic
 {
-    internal class Plane : IUpdateable
+    [Serializable]
+    class Plane : IUpdateable
     {
-        public string Model { get; init; } = string.Empty;
+        private const string s_defaultModel = "Boeing 777";
+        public string Model { get; init; } = s_defaultModel;
         private Vector2 _location = new();
         public Vector2 Location
         {
@@ -22,8 +19,8 @@ namespace LW3
                 _location = value;
             }
         }
-        public uint Velocity { get; init; } = 100;
-        public Flight? Flight = new();
+        public uint Velocity { get; init; } = 10;
+        public Flight? Flight;
 
         private DateTime _updated = DateTime.Now;
         public DateTime Updated
@@ -38,20 +35,35 @@ namespace LW3
             }
         }
 
+        public Plane(string model = s_defaultModel)
+        {
+            Model = model;
+        }
+
+        public bool IsIdling()
+        {
+            return Flight == null || DateTime.Now < Flight.DepartureTime;
+        }
         public Vector2 FlightDirection()
         {
             if (Flight != null)
             {
-                return Vector2.Normalize(Flight.Destination.Location - _location);
+                var difference = Flight.Destination.Location - _location;
+                if(difference != Vector2.Zero)
+                {
+                    return Vector2.Normalize(difference);
+                }
             }
-            else
-            {
-                return Vector2.Zero;
-            }
+            
+            return Vector2.Zero;
+        }
+        public void SetLocation(Vector2 location)
+        {
+            _location = location;
         }
         public void Update()
         {
-            if (Flight == null || DateTime.Now < Flight.DepartureTime)
+            if (IsIdling())
             {
                 return;
             }
@@ -59,7 +71,7 @@ namespace LW3
 
             Vector2 dS = Vector2.Multiply(FlightDirection(), (int)dT.TotalSeconds * Velocity);
 
-            if (Vector2.Distance(Flight.Destination.Location, _location) < dS.Length())
+            if (Vector2.Distance(Flight.Destination.Location, _location) <= dS.Length())
             {
                 _location = Flight.Destination.Location;
                 Flight.Destination.AcceptPlane(this);
