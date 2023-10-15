@@ -35,13 +35,7 @@ namespace LW3.Logic
                 _updated = value;
             }
         }
-        public bool Idling
-        {
-            get
-            {
-                return Flight == null ||  Flight.Destination == null || DateTime.Now < Flight.DepartureTime;
-            }
-        }
+        public bool Idling => Flight == null || Flight.Destination == null || DateTime.Now < Flight.DepartureTime;
         public Plane() { }
         public Plane(string model, uint velocity)
         {

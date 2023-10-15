@@ -1,12 +1,11 @@
-﻿using System.Numerics;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace LW3.Logic
 {
     [Serializable]
     class Airport : IUpdateable
     {
-        private PointF _location = new ();
+        private PointF _location = new();
         public PointF Location
         {
             get

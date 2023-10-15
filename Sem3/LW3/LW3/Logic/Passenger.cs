@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LW3.Logic
+﻿namespace LW3.Logic
 {
-    //class Passenger
-    //{
-    //    public string Name = string.Empty;
-    //    public string Surname = string.Empty;
-    //    public int PassNumber = 0;
-    //    public List<Ticket> Tickets = new();
+    [Serializable]
+    class Passenger
+    {
+        public string Name { get; init; } = string.Empty;
+        public string Surname { get; init; } = string.Empty;
+        public int PassNumber { get; init; } = 0;
 
-    //    public Passenger(string name, string surname, int passnumber)
-    //    {
-    //        Name = name;
-    //        Surname = surname;
-    //        PassNumber = passnumber;
-    //    }
-    //}
+        public List<Ticket> Tickets = new();
+
+        public Passenger(string name, string surname, int passnumber)
+        {
+            Name = name;
+            Surname = surname;
+            PassNumber = passnumber;
+        }
+    }
 }

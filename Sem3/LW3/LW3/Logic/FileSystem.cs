@@ -9,7 +9,7 @@ namespace LW3.Logic
         public static void SaveToFile(Simulation simulation)
         {
             File.WriteAllText(s_filePath, string.Empty);
-            
+
             using (FileStream fileStream = File.OpenWrite(s_filePath))
             {
                 JsonSerializerOptions options = new()
