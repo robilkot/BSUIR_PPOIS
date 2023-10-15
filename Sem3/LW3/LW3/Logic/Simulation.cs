@@ -1,75 +1,85 @@
-﻿using System.Numerics;
-
-namespace LW3.Logic
+﻿namespace LW3.Logic
 {
     [Serializable]
     class Simulation
     {
-        public static Rectangle Bounds = new(0, 0, 200, 200);
-        public List<Airport> Airports { get; set; } = new();
-        public List<Plane> Planes { get; set; } = new();
-
-        public Simulation() { }
+        public static Rectangle Bounds { get; set; } = new(0, 0, 200, 200);
+        public TimeSpan UpdateInterval { get; set; } = new(0, 0, 0, 0, 100);
+        public List<Airport> Airports { get; init; } = new();
+        public List<Plane> Planes { get; init; } = new();
         public void InitializeExample()
         {
             Airports.Clear();
             Planes.Clear();
 
-            Airport airport1 = new(new Vector2(200, 100)) { Name = "Airport One" };
-            Airport airport2 = new(new Vector2(800, 100)) { Name = "Airport Two" };
-            Airport airport3 = new(new Vector2(500, 500)) { Name = "Airport Three" };
-            Airport airport4 = new(new Vector2(1000, 300)) { Name = "Airport Four" };
+            static Rectangle randomRect(int x, int y)
+            {
+                return new(x - 30, y - 30, 60, 60);
+            }
 
-            var airport1Planes = new List<Plane>() {
-                new Plane("Boeing 737"),
-                new Plane("Boeing 767"),
-                new Plane("Boeing 777")
+            Airport newyork = new(randomRect(250, 100)) { Name = "Нью-Йорк" };
+            Airport berlin = new(randomRect(900, 100)) { Name = "Берлин" };
+            Airport moscow = new(randomRect(250, 500)) { Name = "Москва" };
+            Airport minsk = new(randomRect(900, 500)) { Name = "Минск" };
+
+            var newyorkPlanes = new List<Plane>() {
+                new Plane("Boeing 737", 230),
+                new Plane("Boeing 767", 250),
+                new Plane("Boeing 777", 270)
             };
 
-            var airport2Planes = new List<Plane>() {
-                new Plane("Airbus A320"),
-                new Plane("Airbus A330"),
-                new Plane("Airbus A380")
+            var berlinPlanes = new List<Plane>() {
+                new Plane("Airbus A320", 230),
+                new Plane("Airbus A330", 240),
+                new Plane("Airbus A380", 250)
             };
 
-            var airport3Planes = new List<Plane>() {
-                new Plane("Ту-204"),
-                new Plane("Ту-214")
+            var moscowPlanes = new List<Plane>() {
+                new Plane("Ту-204", 200),
+                new Plane("Ту-214", 220)
             };
 
-            Planes.AddRange(airport1Planes);
-            Planes.AddRange(airport2Planes);
-            Planes.AddRange(airport3Planes);
+            var minskPlanes = new List<Plane>() {
+                new Plane("Embraer 195", 250),
+                new Plane("Embraer 195-E2", 270),
+                new Plane("Embraer 175", 220)
+            };
 
-            foreach ( Plane plane in airport1Planes)
-                airport1.AddPlane(plane);
+            Planes.AddRange(newyorkPlanes);
+            Planes.AddRange(berlinPlanes);
+            Planes.AddRange(moscowPlanes);
+            Planes.AddRange(minskPlanes);
 
-            foreach (Plane plane in airport2Planes)
-                airport2.AddPlane(plane);
+            foreach (Plane plane in newyorkPlanes)
+                newyork.AddPlane(plane);
 
-            foreach (Plane plane in airport3Planes)
-                airport3.AddPlane(plane);
+            foreach (Plane plane in berlinPlanes)
+                berlin.AddPlane(plane);
 
-            Flight testFlight1 = new(airport2, DateTime.Now, new TimeSpan(0, 0, 0));
-            Flight testFlight2 = new(airport3, DateTime.Now, new TimeSpan(0, 0, 0));
-            Flight testFlight3 = new(airport1, DateTime.Now, new TimeSpan(0, 0, 0));
+            foreach (Plane plane in moscowPlanes)
+                moscow.AddPlane(plane);
 
-            Flight testFlight4 = new(airport4, DateTime.Now, new TimeSpan(0, 0, 0));
-            Flight testFlight5 = new(airport1, DateTime.Now, new TimeSpan(0, 0, 0));
-            Flight testFlight6 = new(airport3, DateTime.Now, new TimeSpan(0, 0, 0));
+            foreach (Plane plane in minskPlanes)
+                minsk.AddPlane(plane);
 
-            airport1.ScheduleFlight(testFlight1);
-            airport2.ScheduleFlight(testFlight2);
-            airport3.ScheduleFlight(testFlight3);
+            Flight newyorkFlight1 = new(berlin, DateTime.Now, new TimeSpan(0, 0, 2));
+            Flight berlinFlight1 = new(moscow, DateTime.Now, new TimeSpan(0, 0, 4));
+            Flight berlinFlight2 = new(minsk, DateTime.Now, new TimeSpan(0, 0, 4));
+            Flight moscowFlight1 = new(newyork, DateTime.Now, new TimeSpan(0, 0, 3));
+            Flight minskFlight1 = new(newyork, DateTime.Now, new TimeSpan(0, 0, 5));
+            Flight minskFlight2 = new(moscow, DateTime.Now, new TimeSpan(0, 0, 6));
 
-            airport2.ScheduleFlight(testFlight4);
-            airport4.ScheduleFlight(testFlight5);
-            airport4.ScheduleFlight(testFlight6);
+            newyork.ScheduleFlight(newyorkFlight1);
+            berlin.ScheduleFlight(berlinFlight1);
+            berlin.ScheduleFlight(berlinFlight2);
+            moscow.ScheduleFlight(moscowFlight1);
+            minsk.ScheduleFlight(minskFlight1);
+            minsk.ScheduleFlight(minskFlight2);
 
-            Airports.Add(airport1);
-            Airports.Add(airport2);
-            Airports.Add(airport3);
-            Airports.Add(airport4);
+            Airports.Add(newyork);
+            Airports.Add(berlin);
+            Airports.Add(moscow);
+            Airports.Add(minsk);
         }
         public void Update()
         {
@@ -77,7 +87,7 @@ namespace LW3.Logic
             {
                 airport.Update();
             }
-            foreach(Plane plane in Planes)
+            foreach (Plane plane in Planes)
             {
                 plane.Update();
             }

@@ -1,24 +1,53 @@
-using LW3.UserInterface;
+using System.Reflection;
 
-namespace LW3
+namespace LW3.UserInterface
 {
     public partial class SimulationForm : Form
     {
         public SimulationForm()
         {
             InitializeComponent();
+
+            typeof(Panel).InvokeMember("DoubleBuffered", BindingFlags.SetProperty
+            | BindingFlags.Instance | BindingFlags.NonPublic, null,
+            panel1, new object[] { true });
         }
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            DrawFlights(e);
-            DrawAirports(e);
-            DrawPlanes(e);
+            SimulationFormDrawing.DrawFlights(e);
+            SimulationFormDrawing.DrawAirports(e);
+            SimulationFormDrawing.DrawPlanes(e);
         }
-        private void button1_Click(object sender, EventArgs e)
+
+        private void graphicsUpdateTimer_Tick(object sender, EventArgs e)
         {
             Program.simulation.Update();
+            panel1.Refresh();
+        }
 
-            Refresh();
+        private void SimulationForm_Load(object sender, EventArgs e)
+        {
+            graphicsUpdateTimer.Interval = (int)Program.simulation.UpdateInterval.TotalMilliseconds;
+            graphicsUpdateTimer.Start();
+        }
+
+        private void saveSimulationButton_Click(object sender, EventArgs e)
+        {
+            saveSimulationDialog.ShowDialog();
+            LW3.Logic.FileSystem.SetFilePath(saveSimulationDialog.FileName);
+            LW3.Logic.FileSystem.SaveToFile(Program.simulation);
+        }
+
+        private void loadSimulationButton_Click(object sender, EventArgs e)
+        {
+            loadSimulationDialog.ShowDialog();
+            LW3.Logic.FileSystem.SetFilePath(loadSimulationDialog.FileName);
+            Program.simulation = LW3.Logic.FileSystem.ReadFromFile();
+        }
+
+        private void resetSimulationButton_Click(object sender, EventArgs e)
+        {
+            Program.simulation.InitializeExample();
         }
     }
 }

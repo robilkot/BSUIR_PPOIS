@@ -6,9 +6,12 @@ namespace LW3.Logic
     class Plane : IUpdateable
     {
         private const string s_defaultModel = "Boeing 777";
+        private const uint s_defaultVelocity = 200;
+        public uint Velocity { get; init; } = 200;
+        public Flight? Flight;
         public string Model { get; init; } = s_defaultModel;
-        private Vector2 _location = new();
-        public Vector2 Location
+        private PointF _location = new();
+        public PointF Location
         {
             get
             {
@@ -19,8 +22,6 @@ namespace LW3.Logic
                 _location = value;
             }
         }
-        public uint Velocity { get; init; } = 10;
-        public Flight? Flight;
 
         private DateTime _updated = DateTime.Now;
         public DateTime Updated
@@ -34,51 +35,55 @@ namespace LW3.Logic
                 _updated = value;
             }
         }
-
-        public Plane(string model = s_defaultModel)
+        public bool Idling
+        {
+            get
+            {
+                return Flight == null ||  Flight.Destination == null || DateTime.Now < Flight.DepartureTime;
+            }
+        }
+        public Plane(string model = s_defaultModel, uint velocity = s_defaultVelocity)
         {
             Model = model;
+            Velocity = velocity;
         }
 
-        public bool IsIdling()
-        {
-            return Flight == null || DateTime.Now < Flight.DepartureTime;
-        }
         public Vector2 FlightDirection()
         {
-            if (Flight != null)
+            if (Flight != null && Flight.Destination != null)
             {
-                var difference = Flight.Destination.Location - _location;
-                if(difference != Vector2.Zero)
-                {
-                    return Vector2.Normalize(difference);
-                }
+                Vector2 difference = new(Flight.Destination.Location.X - _location.X, Flight.Destination.Location.Y - _location.Y);
+                return Vector2.Normalize(difference);
             }
             
             return Vector2.Zero;
         }
-        public void SetLocation(Vector2 location)
+        public void SetLocation(PointF location)
         {
             _location = location;
         }
         public void Update()
         {
-            if (IsIdling())
+            var dT = DateTime.Now - _updated;
+            _updated = DateTime.Now;
+            
+            if (Idling)
             {
                 return;
             }
-            var dT = DateTime.Now - _updated;
 
-            Vector2 dS = Vector2.Multiply(FlightDirection(), (int)dT.TotalSeconds * Velocity);
+            var dS = Vector2.Multiply(FlightDirection(), (int)dT.TotalMilliseconds * Velocity / 1000);
 
-            if (Vector2.Distance(Flight.Destination.Location, _location) <= dS.Length())
+            var remainingDistance = Math.Sqrt(Math.Pow(Flight.Destination.Location.X - _location.X, 2) + Math.Pow(Flight.Destination.Location.Y - _location.Y, 2));
+            if (remainingDistance <= dS.Length())
             {
                 _location = Flight.Destination.Location;
                 Flight.Destination.AcceptPlane(this);
             }
             else
             {
-                _location += dS;
+                _location.X += dS.X;
+                _location.Y += dS.Y;
             }
         }
     }
