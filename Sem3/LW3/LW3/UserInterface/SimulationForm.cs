@@ -33,16 +33,20 @@ namespace LW3.UserInterface
 
         private void saveSimulationButton_Click(object sender, EventArgs e)
         {
-            saveSimulationDialog.ShowDialog();
-            LW3.Logic.FileSystem.SetFilePath(saveSimulationDialog.FileName);
-            LW3.Logic.FileSystem.SaveToFile(Program.simulation);
+            if (saveSimulationDialog.ShowDialog() == DialogResult.OK)
+            {
+                LW3.Logic.FileSystem.SetFilePath(saveSimulationDialog.FileName);
+                LW3.Logic.FileSystem.SaveToFile(Program.simulation);
+            }
         }
 
         private void loadSimulationButton_Click(object sender, EventArgs e)
         {
-            loadSimulationDialog.ShowDialog();
-            LW3.Logic.FileSystem.SetFilePath(loadSimulationDialog.FileName);
-            Program.simulation = LW3.Logic.FileSystem.ReadFromFile();
+            if (loadSimulationDialog.ShowDialog() == DialogResult.OK)
+            {
+                LW3.Logic.FileSystem.SetFilePath(loadSimulationDialog.FileName);
+                Program.simulation = LW3.Logic.FileSystem.ReadFromFile();
+            }
         }
 
         private void resetSimulationButton_Click(object sender, EventArgs e)

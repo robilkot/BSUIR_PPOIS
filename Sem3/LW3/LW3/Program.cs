@@ -15,7 +15,6 @@ namespace LW3
 
             Simulation.Bounds = form.Bounds;
 
-            simulation.InitializeExample();
             simulation.UpdateInterval = new TimeSpan(0, 0, 0, 0, 15);
 
             Application.Run(form);

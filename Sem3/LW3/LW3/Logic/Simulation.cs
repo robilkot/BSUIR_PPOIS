@@ -5,8 +5,8 @@
     {
         public static Rectangle Bounds { get; set; } = new(0, 0, 200, 200);
         public TimeSpan UpdateInterval { get; set; } = new(0, 0, 0, 0, 100);
-        public List<Airport> Airports { get; init; } = new();
-        public List<Plane> Planes { get; init; } = new();
+        public List<Plane> Planes { get; set; } = new();
+        public List<Airport> Airports { get; set; } = new();
         public void InitializeExample()
         {
             Airports.Clear();

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace LW3.Logic
 {
@@ -44,10 +45,8 @@ namespace LW3.Logic
                 _landedPlanes = value;
             }
         }
-        public Airport()
-        {
-            _location = new(0, 0);
-        }
+        [JsonConstructor]
+        public Airport() { }
         public Airport(Rectangle bounds)
         {
             _location = new(new Random().Next(bounds.Left, bounds.Right), new Random().Next(bounds.Top, bounds.Bottom));

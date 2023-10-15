@@ -19,25 +19,25 @@ namespace LW3.UserInterface
         {
             foreach (var airport in Program.simulation.Airports)
             {
-                Rectangle rect = new((int)(airport.Location.X - s_graphRadius), (int)(airport.Location.Y - s_graphRadius), 2 * s_graphRadius, 2 * s_graphRadius);
+                Rectangle rect = new((int)Math.Round(airport.Location.X - s_graphRadius), (int)Math.Round(airport.Location.Y - s_graphRadius), 2 * s_graphRadius, 2 * s_graphRadius);
 
                 e.Graphics.DrawRectangle(s_solidPen, rect);
                 e.Graphics.FillRectangle(s_fillBrush, rect);
 
-                var textLocation = new Point((int)airport.Location.X - s_graphRadius, (int)airport.Location.Y + s_graphRadius);
+                var textLocation = new Point((int)Math.Round(airport.Location.X - s_graphRadius), (int)Math.Round(airport.Location.Y + s_graphRadius));
                 TextRenderer.DrawText(e.Graphics, airport.Name, s_airportNameFont, textLocation, SystemColors.ControlText);
                 textLocation.Y += s_airportNameFont.Height;
 
-                foreach (var flight in airport.Schedule)
-                {
-                    TextRenderer.DrawText(e.Graphics, $"-> {flight.Destination?.Name}, {flight.DepartureTime:HH:mm:ss}", s_flightNameFont, textLocation, SystemColors.ControlText);
-                    textLocation.Y += s_airportDetailsFont.Height;
-                }
+                //foreach (var flight in airport.Schedule)
+                //{
+                //    TextRenderer.DrawText(e.Graphics, $"-> {flight.Destination?.Name}, {flight.DepartureTime:HH:mm:ss}", s_flightNameFont, textLocation, SystemColors.ControlText);
+                //    textLocation.Y += s_airportDetailsFont.Height;
+                //}
                 //textLocation.Y += s_flightNameFont.Height;
 
                 foreach (var plane in airport.LandedPlanes)
                 {
-                    TextRenderer.DrawText(e.Graphics, $"{plane.Flight?.DepartureTime.ToString("HH:mm:ss")} {plane.Model}", s_airportDetailsFont, textLocation, SystemColors.ControlText);
+                    TextRenderer.DrawText(e.Graphics, $"{plane.Flight?.DepartureTime.ToString("HH:mm:ss")} {plane.Flight?.Destination?.Name} ({plane.Model})", s_airportDetailsFont, textLocation, SystemColors.ControlText);
                     textLocation.Y += s_airportDetailsFont.Height;
                 }
             }
@@ -61,7 +61,7 @@ namespace LW3.UserInterface
 
                     e.Graphics.DrawLine(s_dashPen, firstPoint, secondPoint);
 
-                    var textLocation = new Point(firstPoint.X + (secondPoint.X - firstPoint.X) * 1 / 3, firstPoint.Y + (secondPoint.Y - firstPoint.Y) * 1 / 3);
+                    var textLocation = new Point(firstPoint.X + (secondPoint.X - firstPoint.X) * 2 / 5, firstPoint.Y + (secondPoint.Y - firstPoint.Y) * 2 / 5);
                     TextRenderer.DrawText(e.Graphics, $"{airport.Name} -> {flight.Destination.Name}", s_flightNameFont, textLocation, SystemColors.ControlDark);
                 }
 
@@ -72,12 +72,12 @@ namespace LW3.UserInterface
             var planesToDraw = Program.simulation.Planes.Where(plane => plane.Idling == false);
             foreach (var plane in planesToDraw)
             {
-                Rectangle rect = new((int)(plane.Location.X - s_graphRadius / 2), (int)(plane.Location.Y - s_graphRadius / 2), s_graphRadius, s_graphRadius);
+                Rectangle rect = new((int)Math.Round(plane.Location.X - s_graphRadius / 2), (int)Math.Round(plane.Location.Y - s_graphRadius / 2), s_graphRadius, s_graphRadius);
                 //e.Graphics.DrawEllipse(s_solidPen, rect);
                 e.Graphics.FillEllipse(s_fillBrush, rect);
 
-                var textLocation = new Point((int)plane.Location.X - s_graphRadius / 2, (int)plane.Location.Y + s_graphRadius / 2);
-                TextRenderer.DrawText(e.Graphics, plane.Model, s_planeModelFont, textLocation, SystemColors.ControlText);
+                var textLocation = new Point((int)Math.Round(plane.Location.X - s_graphRadius / 2), (int)Math.Round(plane.Location.Y + s_graphRadius / 2));
+                TextRenderer.DrawText(e.Graphics, $"{plane.Model} ({ plane.Flight?.Destination?.Name})", s_planeModelFont, textLocation, SystemColors.ControlText);
             }
         }
     }

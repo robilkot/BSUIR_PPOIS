@@ -7,8 +7,8 @@ namespace LW3.Logic
     {
         private const string s_defaultModel = "Boeing 777";
         private const uint s_defaultVelocity = 200;
-        public uint Velocity { get; init; } = 200;
-        public Flight? Flight;
+        public uint Velocity { get; init; } = s_defaultVelocity;
+        public Flight? Flight { get; set; }
         public string Model { get; init; } = s_defaultModel;
         private PointF _location = new();
         public PointF Location
@@ -42,7 +42,8 @@ namespace LW3.Logic
                 return Flight == null ||  Flight.Destination == null || DateTime.Now < Flight.DepartureTime;
             }
         }
-        public Plane(string model = s_defaultModel, uint velocity = s_defaultVelocity)
+        public Plane() { }
+        public Plane(string model, uint velocity)
         {
             Model = model;
             Velocity = velocity;
