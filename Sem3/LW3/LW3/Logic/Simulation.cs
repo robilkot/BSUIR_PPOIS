@@ -1,12 +1,32 @@
-﻿namespace LW3.Logic
+﻿using System.Text.Json.Serialization;
+
+namespace LW3.Logic
 {
     [Serializable]
     class Simulation
     {
         public Rectangle Bounds { get; set; } = new(0, 0, 200, 200);
-        public TimeSpan UpdateInterval { get; set; } = new(0, 0, 0, 0, 100);
+        public DateTime VirtualBeginTime { get; init; } = DateTime.Now;
+        public DateTime VirtualCurrentTime { get => _virtualCurrentTime; init => _virtualCurrentTime = value; }
+        private DateTime _virtualCurrentTime = DateTime.Now;
+        public DateTime VirtualLastUpdateTime { get => _virtualLastUpdateTime; init => _virtualLastUpdateTime = value; }
+        private DateTime _virtualLastUpdateTime = DateTime.Now;
+        //public DateTime LastUpdateTime { get => _lastUpdateTime; init => _lastUpdateTime = value; }
+        private DateTime _lastUpdateTime = DateTime.Now;
+
+        public float TimeScale = 1;
+        public TimeSpan UpdateInterval { get; set; } = new(0, 0, 0, 0, 15);
         public List<Plane> Planes { get; set; } = new();
         public List<Airport> Airports { get; set; } = new();
+
+        [JsonConstructor]
+        public Simulation() { }
+        public Simulation(DateTime beginTime = default)
+        {
+            VirtualBeginTime = beginTime;
+            _virtualCurrentTime = VirtualBeginTime;
+            _virtualLastUpdateTime = VirtualBeginTime;
+        }
         public void InitializeExample()
         {
             Airports.Clear();
@@ -62,13 +82,13 @@
             foreach (Plane plane in minskPlanes)
                 minsk.AddPlane(plane);
 
-            Flight newyorkFlight1 = new(berlin, DateTime.Now, new TimeSpan(0, 0, 6));
-            Flight berlinFlight1 = new(moscow, DateTime.Now, new TimeSpan(0, 0, 12));
-            Flight berlinFlight2 = new(minsk, DateTime.Now, new TimeSpan(0, 0, 12));
-            Flight moscowFlight1 = new(newyork, DateTime.Now, new TimeSpan(0, 0, 10));
-            Flight moscowFlight2 = new(minsk, DateTime.Now, new TimeSpan(0, 0, 9));
-            Flight minskFlight1 = new(newyork, DateTime.Now, new TimeSpan(0, 0, 15));
-            Flight minskFlight2 = new(moscow, DateTime.Now, new TimeSpan(0, 0, 6));
+            Flight newyorkFlight1 = new(berlin, VirtualBeginTime, new TimeSpan(0, 0, 6));
+            Flight berlinFlight1 = new(moscow, VirtualBeginTime, new TimeSpan(0, 0, 12));
+            Flight berlinFlight2 = new(minsk, VirtualBeginTime, new TimeSpan(0, 0, 12));
+            Flight moscowFlight1 = new(newyork, VirtualBeginTime, new TimeSpan(0, 0, 10));
+            Flight moscowFlight2 = new(minsk, VirtualBeginTime, new TimeSpan(0, 0, 9));
+            Flight minskFlight1 = new(newyork, VirtualBeginTime, new TimeSpan(0, 0, 15));
+            Flight minskFlight2 = new(moscow, VirtualBeginTime, new TimeSpan(0, 0, 6));
 
             newyork.ScheduleFlight(newyorkFlight1);
             berlin.ScheduleFlight(berlinFlight1);
@@ -85,14 +105,19 @@
         }
         public void Update()
         {
+            _virtualCurrentTime += (DateTime.Now - _lastUpdateTime) * TimeScale;
+
             foreach (Airport airport in Airports)
             {
                 airport.Update();
             }
             foreach (Plane plane in Planes)
             {
-                plane.Update();
+                plane.Update(_virtualCurrentTime, _virtualCurrentTime - _virtualLastUpdateTime);
             }
+
+            _virtualLastUpdateTime = _virtualCurrentTime;
+            _lastUpdateTime = DateTime.Now;
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace LW3.Logic
 {
     [Serializable]
-    class Plane : IUpdateable
+    class Plane
     {
         private const string s_defaultModel = "Boeing 777";
         private const uint s_defaultVelocity = 200;
@@ -23,19 +23,7 @@ namespace LW3.Logic
             }
         }
 
-        private DateTime _updated = DateTime.Now;
-        public DateTime Updated
-        {
-            get
-            {
-                return _updated;
-            }
-            init
-            {
-                _updated = value;
-            }
-        }
-        public bool Idling => Flight == null || Flight.Destination == null || DateTime.Now < Flight.DepartureTime;
+        public bool Idling(DateTime currentTime) => Flight == null || Flight.Destination == null || currentTime < Flight.DepartureTime;
         public Plane() { }
         public Plane(string model, uint velocity)
         {
@@ -57,12 +45,9 @@ namespace LW3.Logic
         {
             _location = location;
         }
-        public void Update()
-        {
-            var dT = DateTime.Now - _updated;
-            _updated = DateTime.Now;
-            
-            if (Idling)
+        public void Update(DateTime currentTime, TimeSpan dT)
+        {   
+            if (Idling(currentTime))
             {
                 return;
             }

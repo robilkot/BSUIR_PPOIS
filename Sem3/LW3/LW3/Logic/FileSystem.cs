@@ -34,7 +34,8 @@ namespace LW3.Logic
                 simulation = JsonSerializer.Deserialize<Simulation>(fileStream, options);
             }
 
-            return simulation ?? (new());
+            if (simulation == null) throw new Exception("Error reading file");
+            return simulation;
         }
         public static void SetFilePath(string filePath)
         {

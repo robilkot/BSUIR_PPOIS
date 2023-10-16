@@ -5,15 +5,14 @@ namespace LW3
     internal static class Program
     {
 
-        public static Simulation simulation = new();
+        public static Simulation? simulation;
 
         [STAThread]
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            var form = new UserInterface.SimulationForm();
 
-            simulation.UpdateInterval = new TimeSpan(0, 0, 0, 0, 15);
+            var form = new UserInterface.SimulationForm();
 
             Application.Run(form);
         }
