@@ -1,4 +1,5 @@
-﻿using System.Drawing.Drawing2D;
+﻿using LW3.Logic;
+using System.Drawing.Drawing2D;
 using System.Text;
 
 namespace LW3.UserInterface
@@ -9,6 +10,7 @@ namespace LW3.UserInterface
         private static readonly Font s_airportDetailsFont = new("Segoe UI", 9);
         private static readonly Font s_flightNameFont = new("Segoe UI", 9);
         private static readonly Font s_planeModelFont = new("Segoe UI", 9);
+        private static readonly Font s_passengerNameFont = new("Segoe UI", 9);
         private static readonly Font s_simulationDetailsFont = new("Segoe UI", 9);
 
         private static readonly Pen s_dashPen = new(SystemColors.ControlDark, 1) { DashPattern = new float[] { 10, 50 } };
@@ -26,6 +28,11 @@ namespace LW3.UserInterface
                 e.Graphics.FillRectangle(s_fillBrush, rect);
 
                 var textLocation = new Point((int)Math.Round(airport.Location.X - s_graphRadius), (int)Math.Round(airport.Location.Y + s_graphRadius));
+                
+                var passengerTextLocation = textLocation;
+                passengerTextLocation.Y -= s_airportNameFont.Height + s_graphRadius * 2 ;
+                DrawPassengers(e, airport.Passengers, passengerTextLocation);
+
                 TextRenderer.DrawText(e.Graphics, airport.Name, s_airportNameFont, textLocation, SystemColors.ControlText);
                 textLocation.Y += s_airportNameFont.Height;
 
@@ -41,6 +48,14 @@ namespace LW3.UserInterface
                     TextRenderer.DrawText(e.Graphics, $"{plane.Flight?.DepartureTime.ToString("HH:mm:ss")} {plane.Flight?.Destination?.Name} ({plane.Model})", s_airportDetailsFont, textLocation, SystemColors.ControlText);
                     textLocation.Y += s_airportDetailsFont.Height;
                 }
+            }
+        }
+        private static void DrawPassengers(PaintEventArgs e, List<Passenger> passengers, Point textLocation)
+        {
+            foreach (var passenger in passengers)
+            {
+                TextRenderer.DrawText(e.Graphics, $"{passenger.Name}", s_passengerNameFont, textLocation, SystemColors.ControlText);
+                textLocation.Y -= s_passengerNameFont.Height;
             }
         }
         public static void DrawFlights(PaintEventArgs e)
@@ -78,13 +93,17 @@ namespace LW3.UserInterface
 
                 var textLocation = new Point((int)Math.Round(plane.Location.X - s_graphRadius / 2), (int)Math.Round(plane.Location.Y + s_graphRadius / 2));
                 TextRenderer.DrawText(e.Graphics, $"{plane.Model} ({ plane.Flight?.Destination?.Name})", s_planeModelFont, textLocation, SystemColors.ControlText);
+
+                var passengerTextLocation = textLocation;
+                passengerTextLocation.Y -= 4 * s_graphRadius;
+                DrawPassengers(e, plane.Passengers, passengerTextLocation);
             }
         }
         public static void DrawDetails(PaintEventArgs e)
         {
             var textLocation = new Point(25, 25);
 
-            StringBuilder detailsText= new StringBuilder(128);
+            StringBuilder detailsText= new(128);
             detailsText.Append("Время в симуляции: ");
             detailsText.Append(Program.simulation.VirtualCurrentTime);
             detailsText.Append("\nКоэфициент ускорения: ");

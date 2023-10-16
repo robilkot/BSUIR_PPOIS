@@ -8,42 +8,23 @@ namespace LW3.Logic
         private PointF _location = new();
         public PointF Location
         {
-            get
-            {
-                return _location;
-            }
-            init
-            {
-                _location = value;
-            }
+            get => _location; init => _location = value;
         }
         public string Name { get; set; } = "Unnamed Airport";
 
         private List<Flight> _schedule = new();
         public List<Flight> Schedule
         {
-            get
-            {
-                return _schedule;
-            }
-            init
-            {
-                _schedule = value;
-            }
+            get => _schedule; init => _schedule = value;
         }
 
         private List<Plane> _landedPlanes = new();
         public List<Plane> LandedPlanes
         {
-            get
-            {
-                return _landedPlanes;
-            }
-            init
-            {
-                _landedPlanes = value;
-            }
+            get => _landedPlanes; init => _landedPlanes = value;
         }
+        public List<Passenger> Passengers { get; set; } = new();
+
         [JsonConstructor]
         public Airport() { }
         public Airport(Rectangle bounds)
@@ -73,11 +54,10 @@ namespace LW3.Logic
         {
             _schedule.Add(flight);
         }
-        public void RemoveFlight(Flight flight)
+        public void CancelFlight(Flight flight)
         {
             _schedule.Remove(flight);
         }
-
         public void AssignAllPossibleFlights()
         {
             var notAssignedFlights = _schedule.Where(flight => flight.HasAssignedPlane == false);
@@ -110,6 +90,18 @@ namespace LW3.Logic
         {
             plane.Flight = null;
             _landedPlanes.Add(plane);
+
+            foreach(var passenger in plane.Passengers)
+            {
+                AcceptPassenger(passenger);
+            }
+
+            plane.Passengers.Clear();
+        }
+        public void AcceptPassenger(Passenger passenger)
+        {
+            passenger.CurrentAirport = this;
+            Passengers.Add(passenger);
         }
         public void Update()
         {

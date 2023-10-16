@@ -13,16 +13,10 @@ namespace LW3.Logic
         private PointF _location = new();
         public PointF Location
         {
-            get
-            {
-                return _location;
-            }
-            init
-            {
-                _location = value;
-            }
+            get => _location;
+            init => _location = value;
         }
-
+        public List<Passenger> Passengers = new();
         public bool Idling(DateTime currentTime) => Flight == null || Flight.Destination == null || currentTime < Flight.DepartureTime;
         public Plane() { }
         public Plane(string model, uint velocity)

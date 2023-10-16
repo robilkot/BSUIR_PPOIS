@@ -18,6 +18,7 @@ namespace LW3.Logic
         public TimeSpan UpdateInterval { get; set; } = new(0, 0, 0, 0, 15);
         public List<Plane> Planes { get; set; } = new();
         public List<Airport> Airports { get; set; } = new();
+        public List<Passenger> Passengers { get; set; } = new();
 
         [JsonConstructor]
         public Simulation() { }
@@ -31,6 +32,7 @@ namespace LW3.Logic
         {
             Airports.Clear();
             Planes.Clear();
+            Passengers.Clear();
 
             static Rectangle randomRect(int x, int y)
             {
@@ -42,23 +44,21 @@ namespace LW3.Logic
             Airport moscow = new(randomRect(Bounds.Width / 5 * 4 - 100, Bounds.Height / 5 * 4 - 100)) { Name = "Москва" };
             Airport minsk = new(randomRect(Bounds.Width / 5, Bounds.Height / 5 * 4 - 100)) { Name = "Минск" };
 
+            // Planes
             var newyorkPlanes = new List<Plane>() {
                 new Plane("Boeing 737", 230),
                 new Plane("Boeing 767", 250),
                 new Plane("Boeing 777", 270)
             };
-
             var berlinPlanes = new List<Plane>() {
                 new Plane("Airbus A320", 230),
                 new Plane("Airbus A330", 240),
                 new Plane("Airbus A380", 250)
             };
-
             var moscowPlanes = new List<Plane>() {
                 new Plane("Ту-204", 200),
                 new Plane("Ту-214", 220)
             };
-
             var minskPlanes = new List<Plane>() {
                 new Plane("Embraer 195", 250),
                 new Plane("Embraer 195-E2", 270),
@@ -82,6 +82,8 @@ namespace LW3.Logic
             foreach (Plane plane in minskPlanes)
                 minsk.AddPlane(plane);
 
+
+            // Flights
             Flight newyorkFlight1 = new(berlin, VirtualBeginTime, new TimeSpan(0, 0, 6));
             Flight berlinFlight1 = new(moscow, VirtualBeginTime, new TimeSpan(0, 0, 12));
             Flight berlinFlight2 = new(minsk, VirtualBeginTime, new TimeSpan(0, 0, 12));
@@ -98,6 +100,19 @@ namespace LW3.Logic
             minsk.ScheduleFlight(minskFlight1);
             minsk.ScheduleFlight(minskFlight2);
 
+            // Passengers
+            var pass1 = new Passenger("Joe", minsk);
+            var pass2 = new Passenger("Вова", minsk);
+            var pass3 = new Passenger("Merkel", berlin);
+
+            Passengers.Add(pass1);
+            Passengers.Add(pass2);
+            Passengers.Add(pass3);
+
+            berlin.AcceptPassenger(pass1);
+            moscow.AcceptPassenger(pass2);
+            newyork.AcceptPassenger(pass3);
+
             Airports.Add(newyork);
             Airports.Add(berlin);
             Airports.Add(moscow);
@@ -110,6 +125,10 @@ namespace LW3.Logic
             foreach (Airport airport in Airports)
             {
                 airport.Update();
+            }
+            foreach (Passenger passenger in Passengers)
+            {
+                passenger.Update();
             }
             foreach (Plane plane in Planes)
             {

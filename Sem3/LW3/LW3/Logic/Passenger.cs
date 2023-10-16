@@ -1,19 +1,46 @@
-﻿namespace LW3.Logic
+﻿using System.Text.Json.Serialization;
+
+namespace LW3.Logic
 {
     [Serializable]
     class Passenger
     {
         public string Name { get; init; } = string.Empty;
-        public string Surname { get; init; } = string.Empty;
-        public int PassNumber { get; init; } = 0;
 
-        public List<Ticket> Tickets = new();
+        public Airport? CurrentAirport;
+        public Airport? Destination
+        {
+            get => _destination;
+            set => _destination = value;
 
-        public Passenger(string name, string surname, int passnumber)
+        }
+        private Airport? _destination;
+
+        [JsonConstructor]
+        public Passenger() { }
+        public Passenger(string name, Airport? destination = default)
         {
             Name = name;
-            Surname = surname;
-            PassNumber = passnumber;
+            Destination = destination;
+        }
+
+        public void Update()
+        {
+            if (CurrentAirport == null) return;
+
+            var neededPlane = CurrentAirport.LandedPlanes.Find(p => p?.Flight?.Destination == _destination);
+            if (neededPlane != null)
+            {
+                Board(neededPlane);
+            }
+        }
+        public void Board(Plane plane)
+        {
+            if(CurrentAirport == null) return;
+
+            plane.Passengers.Add(this);
+            CurrentAirport.Passengers.Remove(this);
+            CurrentAirport = null;
         }
     }
 }
