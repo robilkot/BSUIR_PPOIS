@@ -3,7 +3,7 @@
 namespace LW3.Logic
 {
     [Serializable]
-    class Airport
+    public class Airport
     {
         private PointF _location = new();
         public PointF Location

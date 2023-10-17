@@ -3,7 +3,7 @@
 namespace LW3.Logic
 {
     [Serializable]
-    class Passenger
+    public class Passenger
     {
         public string Name { get; init; } = string.Empty;
 

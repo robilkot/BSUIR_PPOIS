@@ -3,7 +3,7 @@
 namespace LW3.Logic
 {
     [Serializable]
-    class Flight : IComparable<Flight>
+    public class Flight : IComparable<Flight>
     {
         public Airport? Destination { get; set; } = null;
         public DateTime DepartureTime { get; set; } = DateTime.Now;

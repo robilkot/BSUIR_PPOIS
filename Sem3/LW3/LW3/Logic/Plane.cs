@@ -3,7 +3,7 @@
 namespace LW3.Logic
 {
     [Serializable]
-    class Plane
+    public class Plane
     {
         private const string s_defaultModel = "Boeing 777";
         private const uint s_defaultVelocity = 200;

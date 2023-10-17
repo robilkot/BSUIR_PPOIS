@@ -3,7 +3,7 @@
 namespace LW3.Logic
 {
     [Serializable]
-    class Simulation
+    public class Simulation
     {
         public Rectangle Bounds { get; set; } = new(0, 0, 200, 200);
         public DateTime VirtualBeginTime { get; init; } = DateTime.Now;

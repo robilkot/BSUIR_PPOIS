@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace LW3.Logic
 {
-    static class FileSystem
+    public static class FileSystem
     {
         private static string s_filePath = "simulation.json";
         public static void SaveToFile(Simulation simulation)
