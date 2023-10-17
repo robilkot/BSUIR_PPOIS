@@ -40,15 +40,6 @@ namespace LW3.Logic
             plane.SetLocation(_location);
             _landedPlanes.Add(plane);
         }
-        public void RemovePlane()
-        {
-            if (_landedPlanes.Count == 0) return;
-            else _landedPlanes.RemoveAt(0);
-        }
-        public void RemovePlane(Plane plane)
-        {
-            _landedPlanes.Remove(plane);
-        }
 
         public void ScheduleFlight(Flight flight)
         {

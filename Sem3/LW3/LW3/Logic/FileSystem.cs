@@ -5,12 +5,12 @@ namespace LW3.Logic
 {
     public static class FileSystem
     {
-        private static string s_filePath = "simulation.json";
+        public static string FilePath { get; set; } = "simulation.json";
         public static void SaveToFile(Simulation simulation)
         {
-            File.WriteAllText(s_filePath, string.Empty);
+            File.WriteAllText(FilePath, string.Empty);
 
-            using (FileStream fileStream = File.OpenWrite(s_filePath))
+            using (FileStream fileStream = File.OpenWrite(FilePath))
             {
                 JsonSerializerOptions options = new()
                 {
@@ -24,7 +24,7 @@ namespace LW3.Logic
         {
             Simulation? simulation;
 
-            using (FileStream fileStream = File.OpenRead(s_filePath))
+            using (FileStream fileStream = File.OpenRead(FilePath))
             {
                 JsonSerializerOptions options = new()
                 {
@@ -36,10 +36,6 @@ namespace LW3.Logic
 
             if (simulation == null) throw new Exception("Error reading file");
             return simulation;
-        }
-        public static void SetFilePath(string filePath)
-        {
-            s_filePath = filePath;
         }
     }
 }

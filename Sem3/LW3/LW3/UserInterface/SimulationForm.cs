@@ -44,7 +44,7 @@ namespace LW3.UserInterface
             if (loadSimulationDialog.ShowDialog() == DialogResult.OK)
             {
                 instructionsLabel.Visible = false;
-                LW3.Logic.FileSystem.SetFilePath(loadSimulationDialog.FileName);
+                LW3.Logic.FileSystem.FilePath = loadSimulationDialog.FileName;
                 Program.simulation = FileSystem.ReadFromFile();
 
                 graphicsUpdateTimer.Interval = (int)Program.simulation.UpdateInterval.TotalMilliseconds;
@@ -57,7 +57,7 @@ namespace LW3.UserInterface
             {
                 saveSimulationButton.Text = "Сохранение";
                 loadSimulationButton.Enabled = false;
-                LW3.Logic.FileSystem.SetFilePath(saveSimulationDialog.FileName);
+                LW3.Logic.FileSystem.FilePath = saveSimulationDialog.FileName;
                 FileSystem.SaveToFile(Program.simulation);
             }
         }
