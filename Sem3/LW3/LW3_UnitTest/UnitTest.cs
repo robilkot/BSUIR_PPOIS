@@ -1,6 +1,7 @@
 using LW3.Logic;
 using System.Drawing;
 using System.Numerics;
+using System.Windows.Forms;
 
 namespace LW3_UnitTest
 {
@@ -10,7 +11,7 @@ namespace LW3_UnitTest
         [TestMethod]
         public void Update_ChangesLocationBydS_WhenRemainingDistanceIsGreaterThandSLength()
         {
-            var plane = new LW3.Logic.Plane();
+            var plane = new LW3.Logic.PassengerPlane();
             var currentTime = DateTime.Now;
             var dT = TimeSpan.FromMilliseconds(100);
             var destination = new Airport()
@@ -32,7 +33,7 @@ namespace LW3_UnitTest
         [TestMethod]
         public void Update_DoesNotChangeLocation_WhenIdling()
         {
-            var plane = new LW3.Logic.Plane();
+            var plane = new LW3.Logic.PassengerPlane();
             var currentTime = DateTime.Now;
             var dT = TimeSpan.FromSeconds(1);
             var initialLocation = plane.Location;
@@ -45,7 +46,7 @@ namespace LW3_UnitTest
         [TestMethod]
         public void Update_FinishesMoving_WhenDistanceToDestinationLessThanDs()
         {
-            var plane = new LW3.Logic.Plane();
+            var plane = new LW3.Logic.PassengerPlane();
             var currentTime = DateTime.Now;
             var dT = TimeSpan.FromSeconds(1);
             var destination = new Airport()
@@ -66,7 +67,7 @@ namespace LW3_UnitTest
         [TestMethod]
         public void FlightDirection_ReturnsZeroVector_WhenFlightAndDestinationAreNull()
         {
-            var plane = new LW3.Logic.Plane();
+            var plane = new LW3.Logic.PassengerPlane();
 
             var result = plane.FlightDirection();
 
@@ -181,7 +182,7 @@ namespace LW3_UnitTest
         [TestMethod]
         public void Airport_CancelsFlight()
         {
-            Simulation test = new Simulation();
+            Simulation test = new();
             test.InitializeExample();
 
             var flightToCancel = test.Airports[0].Schedule[0];
@@ -194,13 +195,19 @@ namespace LW3_UnitTest
         public void Airport_AcceptsFlight()
         {
             Airport testAirport = new();
-            LW3.Logic.Plane testPlane = new();
+            LW3.Logic.PassengerPlane testPlane = new();
             Passenger testPassenger = new();
             testPlane.Passengers.Add(testPassenger);
 
             testAirport.AcceptPlane(testPlane);
 
             Assert.IsFalse(testPlane.Passengers.Contains(testPassenger));
+        }
+
+        [TestMethod]
+        public void Drawing()
+        {
+            
         }
     }
 }

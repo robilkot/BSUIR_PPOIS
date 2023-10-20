@@ -12,7 +12,6 @@ namespace LW3.Logic
         {
             get => _destination;
             set => _destination = value;
-
         }
         private Airport? _destination;
 
@@ -28,13 +27,13 @@ namespace LW3.Logic
         {
             if (CurrentAirport == null) return;
 
-            var neededPlane = CurrentAirport.LandedPlanes.Find(p => p?.Flight?.Destination == _destination);
+            var neededPlane = (PassengerPlane)CurrentAirport.LandedPlanes.Find(p => p is PassengerPlane && p?.Flight?.Destination == _destination);
             if (neededPlane != null)
             {
                 Board(neededPlane);
             }
         }
-        public void Board(Plane plane)
+        public void Board(PassengerPlane plane)
         {
             if(CurrentAirport == null) return;
 

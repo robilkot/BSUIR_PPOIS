@@ -46,23 +46,23 @@ namespace LW3.Logic
 
             // Planes
             var newyorkPlanes = new List<Plane>() {
-                new Plane("Boeing 737", 230),
-                new Plane("Boeing 767", 250),
-                new Plane("Boeing 777", 270)
+                new PassengerPlane("Boeing 737", 230),
+                new PassengerPlane("Boeing 767", 250),
+                new PassengerPlane("Boeing 777", 270)
             };
             var berlinPlanes = new List<Plane>() {
-                new Plane("Airbus A320", 230),
-                new Plane("Airbus A330", 240),
-                new Plane("Airbus A380", 250)
+                new PassengerPlane("Airbus A320", 230),
+                new PassengerPlane("Airbus A330", 240),
+                new PassengerPlane("Airbus A380", 250)
             };
             var moscowPlanes = new List<Plane>() {
-                new Plane("Ту-204", 200),
-                new Plane("Ту-214", 220)
+                new PassengerPlane("Ту-204", 200),
+                new PassengerPlane("Ту-214", 220)
             };
             var minskPlanes = new List<Plane>() {
-                new Plane("Embraer 195", 250),
-                new Plane("Embraer 195-E2", 270),
-                new Plane("Embraer 175", 220)
+                new PassengerPlane("Embraer 195", 250),
+                new PassengerPlane("Embraer 195-E2", 270),
+                new PassengerPlane("Embraer 175", 220)
             };
 
             Planes.AddRange(newyorkPlanes);

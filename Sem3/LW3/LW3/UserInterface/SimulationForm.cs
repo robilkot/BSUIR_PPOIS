@@ -2,6 +2,8 @@
 using System.Reflection;
 using LW3.Logic;
 
+using static LW3.UserInterface.SimulationFormDrawing;
+
 namespace LW3.UserInterface
 {
     public partial class SimulationForm : Form
@@ -15,10 +17,10 @@ namespace LW3.UserInterface
         {
             if (Program.simulation != null)
             {
-                SimulationFormDrawing.DrawFlights(e);
-                SimulationFormDrawing.DrawAirports(e);
-                SimulationFormDrawing.DrawPlanes(e);
-                SimulationFormDrawing.DrawDetails(e);
+                DrawFlights(e);
+                DrawAirports(e);
+                DrawPlanes(e);
+                DrawDetails(e);
             }
         }
 

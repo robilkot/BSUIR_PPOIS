@@ -1,9 +1,13 @@
-﻿using System.Numerics;
+﻿using System.CodeDom;
+using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace LW3.Logic
 {
+    [JsonDerivedType(typeof(PassengerPlane), typeDiscriminator: "passenger")]
+    [JsonDerivedType(typeof(FreightPlane), typeDiscriminator: "freight")]
     [Serializable]
-    public class Plane
+    public abstract class Plane
     {
         private const string s_defaultModel = "Boeing 777";
         private const uint s_defaultVelocity = 200;
@@ -16,8 +20,8 @@ namespace LW3.Logic
             get => _location;
             init => _location = value;
         }
-        public List<Passenger> Passengers = new();
         public bool Idling(DateTime currentTime) => Flight == null || Flight.Destination == null || currentTime < Flight.DepartureTime;
+        [JsonConstructor]
         public Plane() { }
         public Plane(string model, uint velocity)
         {

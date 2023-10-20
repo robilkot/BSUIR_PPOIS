@@ -82,12 +82,14 @@ namespace LW3.Logic
             plane.Flight = null;
             _landedPlanes.Add(plane);
 
-            foreach(var passenger in plane.Passengers)
+            if (plane is PassengerPlane passengerPlane)
             {
-                AcceptPassenger(passenger);
+                foreach (var passenger in passengerPlane.Passengers)
+                {
+                    AcceptPassenger(passenger);
+                }
+                passengerPlane.Passengers.Clear();
             }
-
-            plane.Passengers.Clear();
         }
         public void AcceptPassenger(Passenger passenger)
         {
