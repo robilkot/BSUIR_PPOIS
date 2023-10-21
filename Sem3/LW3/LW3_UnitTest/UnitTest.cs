@@ -203,11 +203,5 @@ namespace LW3_UnitTest
 
             Assert.IsFalse(testPlane.Passengers.Contains(testPassenger));
         }
-
-        [TestMethod]
-        public void Drawing()
-        {
-            
-        }
     }
 }

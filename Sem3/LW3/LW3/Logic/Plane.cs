@@ -43,7 +43,7 @@ namespace LW3.Logic
         {
             _location = location;
         }
-        public void Update(DateTime currentTime, TimeSpan dT)
+        public virtual void Update(DateTime currentTime, TimeSpan dT)
         {   
             if (Idling(currentTime))
             {
@@ -52,7 +52,10 @@ namespace LW3.Logic
 
             var dS = Vector2.Multiply(FlightDirection(), (int)dT.TotalMilliseconds * Velocity / 1000);
 
-            var remainingDistance = Math.Sqrt(Math.Pow(Flight.Destination.Location.X - _location.X, 2) + Math.Pow(Flight.Destination.Location.Y - _location.Y, 2));
+            var remainingDistance = Math.Sqrt(
+                Math.Pow(Flight.Destination.Location.X - _location.X, 2) + 
+                Math.Pow(Flight.Destination.Location.Y - _location.Y, 2)
+                );
             if (remainingDistance <= dS.Length())
             {
                 _location = Flight.Destination.Location;
@@ -64,5 +67,7 @@ namespace LW3.Logic
                 _location.Y += dS.Y;
             }
         }
+
+        public abstract void Unload(Airport airport);
     }
 }

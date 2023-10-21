@@ -12,8 +12,37 @@ namespace LW3.Logic
     {
         public List<Passenger> Passengers = new();
 
+        private bool _servedPassengersWithMeal = false;
+
         public PassengerPlane(string model, uint velocity) : base(model, velocity) { }
         [JsonConstructor]
         public PassengerPlane() { }
+
+        public override void Unload(Airport airport)
+        {
+            foreach (var passenger in Passengers)
+            {
+                airport.AcceptPassenger(passenger);
+            }
+            Passengers.Clear();
+        }
+        public void ServePassengersWithMeal()
+        {
+            foreach(var passenger in Passengers)
+            {
+                passenger.Satisfaction += 15;
+            }
+        }
+
+        public override void Update(DateTime currentTime, TimeSpan dT)
+        {
+            base.Update(currentTime, dT);
+
+            if(Flight != null && currentTime - Flight.DepartureTime > TimeSpan.FromHours(1) && !_servedPassengersWithMeal)
+            {
+                ServePassengersWithMeal();
+                _servedPassengersWithMeal = true;
+            }
+        }
     }
 }

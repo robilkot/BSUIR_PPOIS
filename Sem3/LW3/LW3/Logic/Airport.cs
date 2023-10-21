@@ -24,6 +24,7 @@ namespace LW3.Logic
             get => _landedPlanes; init => _landedPlanes = value;
         }
         public List<Passenger> Passengers { get; set; } = new();
+        public List<Cargo> Cargo { get; set; } = new();
 
         [JsonConstructor]
         public Airport() { }
@@ -82,19 +83,16 @@ namespace LW3.Logic
             plane.Flight = null;
             _landedPlanes.Add(plane);
 
-            if (plane is PassengerPlane passengerPlane)
-            {
-                foreach (var passenger in passengerPlane.Passengers)
-                {
-                    AcceptPassenger(passenger);
-                }
-                passengerPlane.Passengers.Clear();
-            }
+            plane.Unload(this);
         }
         public void AcceptPassenger(Passenger passenger)
         {
             passenger.CurrentAirport = this;
             Passengers.Add(passenger);
+        }
+        public void AcceptCargo(Cargo cargo)
+        {
+            Cargo.Add(cargo);
         }
         public void Update()
         {

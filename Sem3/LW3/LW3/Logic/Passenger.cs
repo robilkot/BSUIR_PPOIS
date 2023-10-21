@@ -7,6 +7,15 @@ namespace LW3.Logic
     {
         public string Name { get; init; } = string.Empty;
 
+        private int _satisfaction = 0;
+        public int Satisfaction
+        {
+            get => _satisfaction; set
+            {
+                if (value <= 100) _satisfaction = value;
+            }
+        }
+
         public Airport? CurrentAirport;
         public Airport? Destination
         {
@@ -35,7 +44,7 @@ namespace LW3.Logic
         }
         public void Board(PassengerPlane plane)
         {
-            if(CurrentAirport == null) return;
+            if (CurrentAirport == null) return;
 
             plane.Passengers.Add(this);
             CurrentAirport.Passengers.Remove(this);

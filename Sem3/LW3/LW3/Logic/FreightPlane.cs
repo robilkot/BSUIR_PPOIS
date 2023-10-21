@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace LW3.Logic
 {
@@ -15,5 +10,13 @@ namespace LW3.Logic
         public FreightPlane(string model, uint velocity) : base(model, velocity) { }
         [JsonConstructor]
         public FreightPlane() { }
+        public override void Unload(Airport airport)
+        {
+            foreach (var cargo in Cargo)
+            {
+                airport.AcceptCargo(cargo);
+            }
+            Cargo.Clear();
+        }
     }
 }
