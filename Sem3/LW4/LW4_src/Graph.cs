@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace LW4
 {
-    public class Graph<TVertex> : IComparable<Graph<TVertex>>, ICloneable, IEnumerable<TVertex>
+    public class Graph<TVertex> : ICloneable, IEnumerable<TVertex>
     {
         private List<Edge<TVertex>> _edges = new();
         public ReadOnlyCollection<Edge<TVertex>> Edges => _edges.AsReadOnly();
@@ -53,16 +53,6 @@ namespace LW4
         public bool Empty()
         {
             return _edges.Count == 0;
-        }
-
-        public int CompareTo(Graph<TVertex>? other)
-        {
-            if (other == null || VertexCount == other.VertexCount)
-                return 0;
-            if (VertexCount > other.VertexCount)
-                return -1;
-            else
-                return 1;
         }
 
         public object Clone()

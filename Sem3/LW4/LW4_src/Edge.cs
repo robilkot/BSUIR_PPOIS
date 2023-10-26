@@ -1,6 +1,6 @@
 ﻿namespace LW4
 {
-    public class Edge<TVertex> : IComparable<Edge<TVertex>>
+    public class Edge<TVertex>
     {
         public TVertex? First { get; set; }
         public TVertex? Second { get; set; }
@@ -23,16 +23,6 @@
                 }
             }
             return false;
-        }
-        public int CompareTo(Edge<TVertex>? other)
-        {
-            if (other == null || Weight == other.Weight)
-                return 0;
-
-            if (Weight > other.Weight)
-                return -1;
-            else
-                return 1;
         }
 
         public TVertex[] ToArray()

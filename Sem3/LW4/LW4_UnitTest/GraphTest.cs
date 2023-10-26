@@ -16,6 +16,32 @@ namespace LW4_UnitTest
         }
 
         [TestMethod]
+        public void ClearGraph_ShouldBeEmpty()
+        {
+            Graph<int> graph = new();
+
+            graph.AddEdge(1, 2);
+            graph.AddEdge(4, 5);
+            graph.Clear();
+
+            Assert.IsTrue(graph.Empty());
+        }
+
+        [TestMethod]
+        public void CompareGraphs_ShouldCompareVerticesCount()
+        {
+            Graph<int> graph1 = new();
+            Graph<int> graph2 = new();
+
+            graph1.AddEdge(1, 2);
+
+            graph2.AddEdge(4, 5);
+            graph2.AddEdge(1, 2);
+
+            Assert.IsTrue(graph1 < graph2 & graph2 > graph1 & graph1 <= graph2 & graph2 >= graph1);
+        }
+
+        [TestMethod]
         public void RemoveEdge_ShouldDecreaseEdgeCount()
         {
             Graph<int> graph = new();
@@ -24,6 +50,18 @@ namespace LW4_UnitTest
             graph.RemoveEdge(1, 2);
             
             Assert.AreEqual(0, graph.EdgeCount);
+        }
+
+        [TestMethod]
+        public void UpdateEdge_ShouldChangeWeight()
+        {
+            Graph<int> graph = new();
+            graph.AddEdge(1, 2, 12);
+
+            graph.AddEdge(1, 2, 25);
+
+            var edge = graph.Edges[graph.Edges.IndexOf(new(1, 2))];
+            Assert.AreEqual(25, edge.Weight);
         }
 
         [TestMethod]
