@@ -40,11 +40,15 @@ namespace FibonacciHeapTest
             FibonacciHeap<object, int> heap = new(0);
 
             FibonacciHeapNode<object, int> node1 = new("wow1", 2);
-            FibonacciHeapNode<object, int> node2 = new("wow2", 2);
+            FibonacciHeapNode<object, int> node2 = new("wow2", 5);
+            FibonacciHeapNode<object, int> node3 = new("wow3", 7);
+            FibonacciHeapNode<object, int> node4 = new("wow4", 8);
             heap.Insert(node1);
             heap.Insert(node2);
+            heap.Insert(node3);
+            heap.Insert(node4);
 
-            heap.DecreaseKey(node2, 1);
+            heap.DecreaseKey(node2, 0);
 
             Assert.AreEqual("wow2", heap.Min().Data);
         }
@@ -54,17 +58,23 @@ namespace FibonacciHeapTest
         {
             FibonacciHeap<object, int> heap = new(0);
 
-            FibonacciHeapNode<object, int> node1 = new("wow1", 2);
-            FibonacciHeapNode<object, int> node2 = new("wow2", 2);
-            FibonacciHeapNode<object, int> node3 = new("wow3", 3);
-
-            heap.Insert(node1);
-            heap.Insert(node2);
+            FibonacciHeapNode<object, int> node1 = new("wow1", 1);
+            FibonacciHeapNode<object, int> node2 = new("wow2", 4);
+            FibonacciHeapNode<object, int> node3 = new("wow3", 2);
+            FibonacciHeapNode<object, int> node4 = new("wow4", 5);
+            FibonacciHeapNode<object, int> node5 = new("wow3", 69);
+            FibonacciHeapNode<object, int> node6 = new("wow4", 70);
+            heap.Insert(node6);
             heap.Insert(node3);
+            heap.Insert(node2);
+            heap.Insert(node5);
+            heap.Insert(node4);
+            heap.Insert(node1);
 
             heap.Delete(node2);
+            heap.Delete(node4);
 
-            Assert.AreEqual(2, heap.Size);
+            Assert.AreEqual(4, heap.Size);
         }
 
         [TestMethod]
@@ -100,14 +110,24 @@ namespace FibonacciHeapTest
         {
             FibonacciHeap<object, int> heap = new(0);
 
-            FibonacciHeapNode<object, int> node1 = new("wow1", 2);
+            FibonacciHeapNode<object, int> node1 = new("wow1", 1);
             FibonacciHeapNode<object, int> node2 = new("wow2", 4);
-            heap.Insert(node1);
+            FibonacciHeapNode<object, int> node3 = new("wow3", 2);
+            FibonacciHeapNode<object, int> node4 = new("wow4", 5);
+            FibonacciHeapNode<object, int> node5 = new("wow3", 69);
+            FibonacciHeapNode<object, int> node6 = new("wow4", 70);
+            heap.Insert(node6);
+            heap.Insert(node3);
             heap.Insert(node2);
+            heap.Insert(node5);
+            heap.Insert(node4);
+            heap.Insert(node1);
 
             heap.RemoveMin();
+            heap.RemoveMin();
+            heap.RemoveMin();
 
-            Assert.AreEqual("wow2", heap.Min().Data);
+            Assert.AreEqual("wow4", heap.Min().Data);
         }
 
         [TestMethod]
