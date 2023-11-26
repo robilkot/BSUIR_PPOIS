@@ -1,280 +1,251 @@
 ﻿namespace FibonacciHeap
 {
-    /// Fibonacci Heap realization. Uses generic type T for data storage and TKey as a key type.
     public class FibonacciHeap<T, TKey> where TKey : IComparable<TKey>
     {
-        /// Maximum nodes quantity in the heap.
-        public static readonly double OneOverLogPhi = 1.0 / Math.Log((1.0 + Math.Sqrt(5.0)) / 2.0);
+        public static readonly double MaxNodesCount = 1.0 / Math.Log((1.0 + Math.Sqrt(5.0)) / 2.0);
 
-        private readonly TKey _minKeyValue;
+        private TKey _minimalKeyValue;
 
-        private FibonacciHeapNode<T, TKey> _minNode;
+        private FibonacciHeapNode<T, TKey> _minimalNode;
 
-        /// The nodes quantity.
-        private int _nNodes;
+        private int _nodesCount;
 
-        public int Size { get { return _nNodes; } }
+        public int Size { get => _nodesCount; }
 
         public FibonacciHeap(TKey minKeyValue)
         {
-            _minKeyValue = minKeyValue;
+            _minimalKeyValue = minKeyValue;
         }
 
         public bool IsEmpty()
         {
-            return _minNode == null;
+            return _minimalNode == null;
         }
 
         public void Clear()
         {
-            _minNode = null;
-            _nNodes = 0;
+            _minimalNode = null;
+            _nodesCount = 0;
         }
 
-        public void DecreaseKey(FibonacciHeapNode<T, TKey> x, TKey k)
+        public void DecreaseKey(FibonacciHeapNode<T, TKey> node, TKey key)
         {
-            if (k.CompareTo(x.Key) > 0)
+            if (key.CompareTo(node.Key) > 0)
             {
-                throw new ArgumentException("decreaseKey() got larger key value");
+                throw new ArgumentException("Requested value is greater than existing");
             }
 
-            x.Key = k;
+            node.Key = key;
 
-            FibonacciHeapNode<T, TKey> y = x.Parent;
+            FibonacciHeapNode<T, TKey> parent = node.Parent;
 
-            if (y != null && x.Key.CompareTo(y.Key) < 0)
+            if (parent != null && node.Key.CompareTo(parent.Key) < 0)
             {
-                Cut(x, y);
-                CascadingCut(y);
+                Cut(node, parent);
+                CascadingCut(parent);
             }
 
-            if (x.Key.CompareTo(_minNode.Key) < 0)
+            if (node.Key.CompareTo(_minimalNode.Key) < 0)
             {
-                _minNode = x;
+                _minimalNode = node;
             }
         }
 
-        public void Delete(FibonacciHeapNode<T, TKey> x)
+        public void Delete(FibonacciHeapNode<T, TKey> node)
         {
-            // make newParent as small as possible
-            DecreaseKey(x, _minKeyValue);
-
-            // remove the smallest, which decreases n also
+            DecreaseKey(node, _minimalKeyValue);
             RemoveMin();
         }
 
         public void Insert(FibonacciHeapNode<T, TKey> node)
         {
-            // concatenate node into min list
-            if (_minNode != null)
+            if (_minimalNode != null)
             {
-                node.Left = _minNode;
-                node.Right = _minNode.Right;
-                _minNode.Right = node;
+                node.Left = _minimalNode;
+                node.Right = _minimalNode.Right;
+                _minimalNode.Right = node;
                 node.Right.Left = node;
 
-                if (node.Key.CompareTo(_minNode.Key) < 0)
+                if (node.Key.CompareTo(_minimalNode.Key) < 0)
                 {
-                    _minNode = node;
+                    _minimalNode = node;
                 }
             }
             else
             {
-                _minNode = node;
+                _minimalNode = node;
             }
 
-            _nNodes++;
+            _nodesCount++;
         }
 
         public FibonacciHeapNode<T, TKey> Min()
         {
-            return _minNode;
+            return _minimalNode;
         }
 
         public FibonacciHeapNode<T, TKey> RemoveMin()
         {
-            FibonacciHeapNode<T, TKey> minNode = _minNode;
+            FibonacciHeapNode<T, TKey> minimalNode = _minimalNode;
 
-            if (minNode != null)
+            if (minimalNode != null)
             {
-                int numKids = minNode.Degree;
-                FibonacciHeapNode<T, TKey> oldMinChild = minNode.Child;
+                int kidsCount = minimalNode.Degree;
+                FibonacciHeapNode<T, TKey> oldMinChild = minimalNode.Child;
 
-                // for each child of minNode do...
-                while (numKids > 0)
+                while (kidsCount > 0)
                 {
                     FibonacciHeapNode<T, TKey> tempRight = oldMinChild.Right;
 
-                    // remove oldMinChild from child list
                     oldMinChild.Left.Right = oldMinChild.Right;
                     oldMinChild.Right.Left = oldMinChild.Left;
 
-                    // add oldMinChild to root list of heap
-                    oldMinChild.Left = _minNode;
-                    oldMinChild.Right = _minNode.Right;
-                    _minNode.Right = oldMinChild;
+                    oldMinChild.Left = _minimalNode;
+                    oldMinChild.Right = _minimalNode.Right;
+                    _minimalNode.Right = oldMinChild;
                     oldMinChild.Right.Left = oldMinChild;
 
-                    // set parent[oldMinChild] to null
                     oldMinChild.Parent = null;
                     oldMinChild = tempRight;
-                    numKids--;
+                    kidsCount--;
                 }
 
-                // remove minNode from root list of heap
-                minNode.Left.Right = minNode.Right;
-                minNode.Right.Left = minNode.Left;
+                minimalNode.Left.Right = minimalNode.Right;
+                minimalNode.Right.Left = minimalNode.Left;
 
-                if (minNode == minNode.Right)
+                if (minimalNode == minimalNode.Right)
                 {
-                    _minNode = null;
+                    _minimalNode = null;
                 }
                 else
                 {
-                    _minNode = minNode.Right;
+                    _minimalNode = minimalNode.Right;
                     Consolidate();
                 }
 
-                // decrement size of heap
-                _nNodes--;
+                _nodesCount--;
             }
 
-            return minNode;
+            return minimalNode;
         }
 
-        public static FibonacciHeap<T, TKey> Union(FibonacciHeap<T, TKey> h1, FibonacciHeap<T, TKey> h2)
+        public static FibonacciHeap<T, TKey> Union(FibonacciHeap<T, TKey> heap1, FibonacciHeap<T, TKey> heap2)
         {
-            var h = new FibonacciHeap<T, TKey>(h1._minKeyValue.CompareTo(h2._minKeyValue) < 0
-                                                   ? h1._minKeyValue
-                                                   : h2._minKeyValue);
+            var result = new FibonacciHeap<T, TKey>(heap1._minimalKeyValue.CompareTo(heap2._minimalKeyValue) < 0
+                                                   ? heap1._minimalKeyValue
+                                                   : heap2._minimalKeyValue);
 
-            if (h1 != null && h2 != null)
+            if (heap1 != null && heap2 != null)
             {
-                h._minNode = h1._minNode;
+                result._minimalNode = heap1._minimalNode;
 
-                if (h._minNode != null)
+                if (result._minimalNode != null)
                 {
-                    if (h2._minNode != null)
+                    if (heap2._minimalNode != null)
                     {
-                        h._minNode.Right.Left = h2._minNode.Left;
-                        h2._minNode.Left.Right = h._minNode.Right;
-                        h._minNode.Right = h2._minNode;
-                        h2._minNode.Left = h._minNode;
+                        result._minimalNode.Right.Left = heap2._minimalNode.Left;
+                        heap2._minimalNode.Left.Right = result._minimalNode.Right;
+                        result._minimalNode.Right = heap2._minimalNode;
+                        heap2._minimalNode.Left = result._minimalNode;
 
-                        if (h2._minNode.Key.CompareTo(h1._minNode.Key) < 0)
+                        if (heap2._minimalNode.Key.CompareTo(heap1._minimalNode.Key) < 0)
                         {
-                            h._minNode = h2._minNode;
+                            result._minimalNode = heap2._minimalNode;
                         }
                     }
                 }
                 else
                 {
-                    h._minNode = h2._minNode;
+                    result._minimalNode = heap2._minimalNode;
                 }
 
-                h._nNodes = h1._nNodes + h2._nNodes;
+                result._nodesCount = heap1._nodesCount + heap2._nodesCount;
             }
 
-            return h;
+            return result;
         }
 
-        /// Performs a cascading cut operation. This cuts newChild from its parent and then
-        /// does the same for its parent, and so on up the tree.
-        private void CascadingCut(FibonacciHeapNode<T, TKey> y)
+        // Cuts newChild from its parent and then
+        // does it for its parent, and so on up of tree.
+        private void CascadingCut(FibonacciHeapNode<T, TKey> node)
         {
-            FibonacciHeapNode<T, TKey> z = y.Parent;
+            FibonacciHeapNode<T, TKey> parent = node.Parent;
 
-            // if there's a parent...
-            if (z != null)
+            if (parent != null)
             {
-                // if newChild is unmarked, set it marked
-                if (!y.Mark)
+                if (node.Mark)
                 {
-                    y.Mark = true;
+                    Cut(node, parent);
+                    CascadingCut(parent);
                 }
                 else
                 {
-                    // it's marked, cut it from parent
-                    Cut(y, z);
-
-                    // cut its parent as well
-                    CascadingCut(z);
+                    node.Mark = true;
                 }
             }
         }
 
         private void Consolidate()
         {
-            int arraySize = (int)Math.Floor(Math.Log(_nNodes) * OneOverLogPhi) + 1;
+            int arraySize = (int)Math.Floor(Math.Log(_nodesCount) * MaxNodesCount) + 1;
 
             var array = new List<FibonacciHeapNode<T, TKey>>(arraySize);
 
-            // Initialize degree array
             for (var i = 0; i < arraySize; i++)
             {
                 array.Add(null);
             }
 
-            // Find the number of root nodes.
-            var numRoots = 0;
-            FibonacciHeapNode<T, TKey> x = _minNode;
+            var rootsCount = 0;
+            FibonacciHeapNode<T, TKey> x = _minimalNode;
 
             if (x != null)
             {
-                numRoots++;
+                rootsCount++;
                 x = x.Right;
 
-                while (x != _minNode)
+                while (x != _minimalNode)
                 {
-                    numRoots++;
+                    rootsCount++;
                     x = x.Right;
                 }
             }
 
-            // For each node in root list do...
-            while (numRoots > 0)
+            while (rootsCount > 0)
             {
-                // Access this node's degree..
-                int d = x.Degree;
+                int degree = x.Degree;
                 FibonacciHeapNode<T, TKey> next = x.Right;
 
-                // ..and see if there's another of the same degree.
-                for (; ; )
+                // Check if there is conflict (same degree).
+                for ( ; ; )
                 {
-                    FibonacciHeapNode<T, TKey> y = array[d];
+                    FibonacciHeapNode<T, TKey> y = array[degree];
                     if (y == null)
                     {
-                        // Nope.
                         break;
                     }
 
-                    // There is, make one of the nodes a child of the other.
-                    // Do this based on the key value.
+                    // If there is, make bigger node a child of the second.
                     if (x.Key.CompareTo(y.Key) > 0)
                     {
                         (x, y) = (y, x);
                     }
 
-                    // FibonacciHeapNode<T> newChild disappears from root list.
                     Link(y, x);
 
-                    // We've handled this degree, go to next one.
-                    array[d] = null;
-                    d++;
+                    array[degree] = null;
+                    degree++;
                 }
 
-                // Save this node for later when we might encounter another
-                // of the same degree.
-                array[d] = x;
+                // Save this node for later (if another conflict occurs)
+                array[degree] = x;
 
-                // Move forward through list.
                 x = next;
-                numRoots--;
+                rootsCount--;
             }
 
-            // Set min to null (effectively losing the root list) and
-            // reconstruct the root list from the array entries in array[].
-            _minNode = null;
+            // reconstruct the root list from the array
+            _minimalNode = null;
 
             for (var i = 0; i < arraySize; i++)
             {
@@ -284,73 +255,61 @@
                     continue;
                 }
 
-                // We've got a live one, add it to root list.
-                if (_minNode != null)
+                if (_minimalNode != null)
                 {
-                    // First remove node from root list.
                     y.Left.Right = y.Right;
                     y.Right.Left = y.Left;
 
-                    // Now add to root list, again.
-                    y.Left = _minNode;
-                    y.Right = _minNode.Right;
-                    _minNode.Right = y;
+                    y.Left = _minimalNode;
+                    y.Right = _minimalNode.Right;
+                    _minimalNode.Right = y;
                     y.Right.Left = y;
 
-                    // Check if this is a new min.
-                    if (y.Key.CompareTo(_minNode.Key) < 0)
+                    if (y.Key.CompareTo(_minimalNode.Key) < 0)
                     {
-                        _minNode = y;
+                        _minimalNode = y;
                     }
                 }
                 else
                 {
-                    _minNode = y;
+                    _minimalNode = y;
                 }
             }
         }
 
-        /// The reverse of the link operation: removes newParent from the child list of newChild.
-        /// This method assumes that min is non-null.
-        private void Cut(FibonacciHeapNode<T, TKey> x, FibonacciHeapNode<T, TKey> y)
+        // Removes newParent from the child list of newChild.
+        // This assumes min is non-null.
+        private void Cut(FibonacciHeapNode<T, TKey> node1, FibonacciHeapNode<T, TKey> node2)
         {
-            // remove newParent from childlist of newChild and decrement degree[newChild]
-            x.Left.Right = x.Right;
-            x.Right.Left = x.Left;
-            y.Degree--;
+            node1.Left.Right = node1.Right;
+            node1.Right.Left = node1.Left;
+            node2.Degree--;
 
-            // reset newChild.child if necessary
-            if (y.Child == x)
+            if (node2.Child == node1)
             {
-                y.Child = x.Right;
+                node2.Child = node1.Right;
             }
 
-            if (y.Degree == 0)
+            if (node2.Degree == 0)
             {
-                y.Child = null;
+                node2.Child = null;
             }
 
-            // add newParent to root list of heap
-            x.Left = _minNode;
-            x.Right = _minNode.Right;
-            _minNode.Right = x;
-            x.Right.Left = x;
+            node1.Left = _minimalNode;
+            node1.Right = _minimalNode.Right;
+            _minimalNode.Right = node1;
+            node1.Right.Left = node1;
 
-            // set parent[newParent] to nil
-            x.Parent = null;
-
-            // set mark[newParent] to false
-            x.Mark = false;
+            node1.Parent = null;
+            node1.Mark = false;
         }
 
-        /// Makes newChild a child of Node newParent.
+        // Makes newChild a child of Node newParent.
         private static void Link(FibonacciHeapNode<T, TKey> newChild, FibonacciHeapNode<T, TKey> newParent)
         {
-            // remove newChild from root list of heap
             newChild.Left.Right = newChild.Right;
             newChild.Right.Left = newChild.Left;
 
-            // make newChild a child of newParent
             newChild.Parent = newParent;
 
             if (newParent.Child == null)
@@ -367,10 +326,7 @@
                 newChild.Right.Left = newChild;
             }
 
-            // increase degree[newParent]
             newParent.Degree++;
-
-            // set mark[newChild] false
             newChild.Mark = false;
         }
     }
