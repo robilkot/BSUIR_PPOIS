@@ -4,5 +4,7 @@
 !*.cs
 !*.csproj
 !*.sln
+!*.py
+!*.md
 **/x64
 **/obj
