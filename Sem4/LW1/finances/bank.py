@@ -1,6 +1,6 @@
-from credit_card import CreditCard
-from transaction import Transaction
-from finance_exceptions import FinanceException
+from .credit_card import CreditCard
+from .transaction import Transaction
+from .finance_exceptions import FinanceException
 from datetime import datetime
 
 
@@ -10,13 +10,13 @@ class Bank:
         self.__cards: list[CreditCard] = []
         self.__transaction_history: list[Transaction] = []
 
-    def add_card(self, card: CreditCard):
+    def add_card(self, card: CreditCard) -> None:
         self.__cards.append(card)
 
-    def remove_card(self, card: CreditCard):
+    def remove_card(self, card: CreditCard) -> None:
         self.__cards.remove(card)
 
-    def get_cards(self):
+    def get_cards(self) -> list[CreditCard]:
         return self.__cards
 
     def transfer(self, sender_card: CreditCard, receiver_card: CreditCard, pin: int, amount: int) -> None:

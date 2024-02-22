@@ -1,7 +1,7 @@
 import unittest
-from credit_card import CreditCard
-from card_owner import CardOwner
-from finance_exceptions import FinanceException
+from finances.credit_card import CreditCard
+from finances.card_owner import CardOwner
+from finances.finance_exceptions import FinanceException
 
 
 class TestCreditCard(unittest.TestCase):
@@ -10,7 +10,7 @@ class TestCreditCard(unittest.TestCase):
         owner = CardOwner(name="John Doe", address="123 Main St", email="john@example.com", phone="555-5555")
         self.credit_card = CreditCard(card_number="1234567890123456", owner=owner)
         self.pin = 1234
-        self.credit_card.change_pin(self.pin)
+        self.credit_card.set_pin(self.pin)
 
     def test_deposit(self):
         # Test deposit method

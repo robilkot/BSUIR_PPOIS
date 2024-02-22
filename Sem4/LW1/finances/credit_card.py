@@ -1,6 +1,6 @@
-from interfaces import PaymentMean
-from finance_exceptions import FinanceException
-from card_owner import CardOwner
+from .interfaces import PaymentMean
+from .finance_exceptions import FinanceException
+from .card_owner import CardOwner
 import random
 
 
@@ -13,7 +13,8 @@ class CreditCard(PaymentMean):
         self.card_number: str = card_number
         self.owner: CardOwner = owner
         self.__payment_limit: int = 0
-        self.__pin: int = pin
+        self.__pin: int = 0
+        self.set_pin(pin)
         self.__balance: int = 0
         self.__is_blocked: bool = is_blocked
         self.__wrong_pin_inputs: int = 0
@@ -72,7 +73,7 @@ class CreditCard(PaymentMean):
     def unblock(self) -> None:
         self.__is_blocked = False
 
-    def change_pin(self, new_pin: int) -> None:
+    def set_pin(self, new_pin: int) -> None:
         if new_pin < 1000 or new_pin >= 10000:
             raise ValueError("Pin must be 4-digit number")
         self.__pin = new_pin
