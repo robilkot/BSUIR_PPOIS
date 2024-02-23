@@ -5,16 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a87bfc6-26df-4b51-abb4-689e00aff0d5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helper.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repository/exceptions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repository/file_repository.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repository/interfaces.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bank.py" beforeDir="false" afterPath="$PROJECT_DIR$/finances/bank.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/card_owner.py" beforeDir="false" afterPath="$PROJECT_DIR$/finances/card_owner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/credit_card.py" beforeDir="false" afterPath="$PROJECT_DIR$/finances/credit_card.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/finance_exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/finances/finance_exceptions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfaces.py" beforeDir="false" afterPath="$PROJECT_DIR$/finances/interfaces.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/transaction.py" beforeDir="false" afterPath="$PROJECT_DIR$/finances/transaction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unit_tests/bank_unit_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/unit_tests/bank_unit_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/unit_tests/credit_card_unit_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/unit_tests/credit_card_unit_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/financial_state_machine.py" beforeDir="false" afterPath="$PROJECT_DIR$/financial_state_machine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +117,7 @@
       <workItem from="1708607475812" duration="2710000" />
       <workItem from="1708610372581" duration="1180000" />
       <workItem from="1708612033370" duration="11040000" />
-      <workItem from="1708625278177" duration="4731000" />
+      <workItem from="1708625278177" duration="12343000" />
     </task>
     <servers />
   </component>
@@ -129,7 +126,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/LW1$credit_card.coverage" NAME="credit_card Coverage Results" MODIFIED="1708628246284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/finances" />
-    <SUITE FILE_PATH="coverage/LW1$main.coverage" NAME="main Coverage Results" MODIFIED="1708629922214" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/LW1$main.coverage" NAME="main Coverage Results" MODIFIED="1708691627647" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LW1$financial_state_machine.coverage" NAME="financial_state_machine Coverage Results" MODIFIED="1708629326237" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LW1$.coverage" NAME=" Coverage Results" MODIFIED="1708615091976" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/unit_tests" />
     <SUITE FILE_PATH="coverage/LW1$finance.coverage" NAME="finance Coverage Results" MODIFIED="1708607230855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
