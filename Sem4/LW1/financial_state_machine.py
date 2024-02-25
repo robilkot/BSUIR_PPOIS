@@ -24,6 +24,7 @@ class FinancialStateMachine(StateMachine):
     deposit = State()
     withdraw = State()
     pay = State()
+    transfer = State()
     change_pin = State()
     change_limit = State()
     toggle_block = State()
@@ -58,6 +59,9 @@ class FinancialStateMachine(StateMachine):
 
             | view_card.to(deposit, cond="navigating_deposit")
             | view_card.from_(deposit)
+
+            | view_card.to(transfer, cond="navigating_transfer")
+            | view_card.from_(transfer)
 
             | view_card.to(pay, cond="navigating_pay")
             | view_card.from_(pay)
@@ -118,6 +122,9 @@ class FinancialStateMachine(StateMachine):
 
     def navigating_limit(self, input_: str) -> bool:
         return input_ == 'lim'
+
+    def navigating_transfer(self, input_: str) -> bool:
+        return input_ == 'trs'
 
     def navigating_create(self, input_: str) -> bool:
         return input_ == 'c'
@@ -240,6 +247,26 @@ class FinancialStateMachine(StateMachine):
 
         try:
             self.selected_card.pay(input_amount, input_pin)
+        except FinanceException as fe:
+            print(str(fe))
+        except ValueError as e:
+            print(str(e))
+
+        self.move_next()
+
+    def on_enter_transfer(self) -> None:
+        input_receiver: str = input("receiver card number")
+        receiver_card = next((x for x in self.selected_bank.get_cards() if x.card_number == input_receiver), None)
+        if receiver_card is None:
+            print("No such card found")
+            self.move_next()
+            return
+
+        input_amount: int = helper.input_numeric("transfer amount")
+        input_pin: int = helper.input_numeric("PIN")
+
+        try:
+            self.selected_bank.transfer(self.selected_card, receiver_card, input_pin, input_amount)
         except FinanceException as fe:
             print(str(fe))
         except ValueError as e:
