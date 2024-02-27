@@ -140,7 +140,7 @@ class FinancialStateMachine(StateMachine):
 
     def on_enter_view_banks(self) -> None:
         self.selected_bank = None
-        print("List of all banks:")
+        print("List of all banks.\nPress q to exit, c to add new bank, number to view bank")
         for i in range(len(self.banks)):
             print(f"{i} - {self.banks[i].name}")
 
@@ -169,7 +169,9 @@ class FinancialStateMachine(StateMachine):
             if self.selected_card is None:
                 self.selected_card = self.selected_bank.get_cards()[self.selected_index]
 
-            print("Card information")
+            print("Card information.\nPress q to return, bal to check balance, trs to transfer,\n"
+                  "wdr to withdraw, Pay to pay, blc to toggle block of card,\n"
+                  "dep to deposit, pin to change pin, lim to change limit, del to delete card")
             print(self.selected_card.card_number)
             print(self.selected_card.owner.name)
             if self.selected_card.is_blocked():
@@ -184,7 +186,8 @@ class FinancialStateMachine(StateMachine):
             if self.selected_bank is None:
                 self.selected_bank = self.banks[self.selected_index]
 
-            print(f"{self.selected_bank.name} information:")
+            print(f"{self.selected_bank.name} information.\nPress q to return, d to delete bank,\n"
+                  f"c to add new card, number to view card")
             cards = self.selected_bank.get_cards()
             for i in range(len(cards)):
                 print(f"{i} - {cards[i].card_number}; {cards[i].owner.name}")

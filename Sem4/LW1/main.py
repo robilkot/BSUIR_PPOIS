@@ -3,7 +3,7 @@ from repository.file_repository import FileRepository, Repository
 
 repository: Repository = FileRepository("appstate.pickle")
 
-gm = FinancialStateMachine(repository)
+state_machine = FinancialStateMachine(repository)
 
 while True:
-    gm.move_next(input())
+    state_machine.move_next(input())
