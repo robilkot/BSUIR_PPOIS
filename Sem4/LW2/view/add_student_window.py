@@ -3,7 +3,7 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
 
-from controller.db_service import DbService
+from controller.db_repository import DbRepository
 from view.center_window import center_window
 
 
@@ -20,7 +20,7 @@ class AddStudentWindow(tk.Toplevel):
         self.name_entry.pack()
         name_frame.pack(pady=10)
 
-        all_groups = self.application.db_svc.get_groups()
+        all_groups = self.application.db_repo.get_groups()
         groups_numbers = [str(group.number) for group in all_groups]
         self.groups_dict = {key: value for key, value in zip(groups_numbers, all_groups)}
 
@@ -36,7 +36,10 @@ class AddStudentWindow(tk.Toplevel):
     def add_student(self):
         if len(self.name_entry.get()) == 0:
             return
-        self.application.db_svc.add_student(self.name_entry.get(), self.groups_dict[self.group_combobox.get()])
+
+        student_group = self.groups_dict[self.group_combobox.get()]
+        self.application.db_repo.add_student(self.name_entry.get(), student_group.id)
 
         self.application.update_students_data()
+        self.destroy()
 

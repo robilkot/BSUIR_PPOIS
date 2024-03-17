@@ -6,6 +6,7 @@ from tkinter.messagebox import showerror, showwarning, showinfo
 
 from view.center_window import center_window
 
+
 class SearchStudentsWindow(tk.Toplevel):
     def __init__(self, master, application):
         super().__init__(master=master)
@@ -35,7 +36,7 @@ class SearchStudentsWindow(tk.Toplevel):
         name_frame.pack(pady=10)
 
         # search by group
-        all_groups = self.application.db_svc.get_groups()
+        all_groups = self.application.db_repo.get_groups()
         groups_numbers = [str(group.number) for group in all_groups]
         self.groups_dict = {key: value for key, value in zip(groups_numbers, all_groups)}
 

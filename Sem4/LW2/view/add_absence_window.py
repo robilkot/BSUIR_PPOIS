@@ -3,7 +3,7 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
 
-from controller.db_service import DbService
+from controller.db_repository import DbRepository
 from model.absence import Absence
 from view.center_window import center_window
 
@@ -16,7 +16,7 @@ class AddAbsenceWindow(tk.Toplevel):
 
         center_window(self, 200, 150)
 
-        all_reasons = self.application.db_svc.get_absence_reasons()
+        all_reasons = self.application.db_repo.get_absence_reasons()
         reasons_numbers = [str(reason.name) for reason in all_reasons]
         self.reasons_dict = {key: value for key, value in zip(reasons_numbers, all_reasons)}
 
@@ -30,8 +30,8 @@ class AddAbsenceWindow(tk.Toplevel):
         add_button.pack(pady=10)
 
     def add_absence(self):
-        self.application.db_svc.add_absence(self.application.selected_student.id,
-                                            self.reasons_dict[self.group_combobox.get()].id)
+        self.application.db_repo.add_absence(self.application.selected_student.id,
+                                             self.reasons_dict[self.group_combobox.get()].id)
 
         self.application.update_absences_data()
         self.application.update_students_data()

@@ -7,25 +7,26 @@ from tkinter import ttk
 from tkinter.messagebox import showerror, showwarning, showinfo
 from typing import Optional
 
-from controller.db_service import DbService
+from controller.file_repository import FileRepository
 from controller.search_criteria import SearchCriteria
 from model.student import Student
 from view.add_absence_window import AddAbsenceWindow
 from view.add_student_window import AddStudentWindow
 from view.center_window import center_window
 from view.delete_students_window import DeleteStudentsWindow
+from view.open_ms_sql_window import OpenMsSqlWindow
 from view.search_student_window import SearchStudentsWindow
 
 
 class Application:
-    def __init__(self, db_svc: DbService):
-        self.db_svc: DbService = db_svc
+    def __init__(self):
+        self.repo = None
         self.table_absences_current_page = 1
         self.table_absences_page_size = 10
         self.table_students = None
         self.table_absences = None
-        self.table_students_pages_count = None
-        self.table_absences_pages_count = None
+        self.table_students_pages_count = 0
+        self.table_absences_pages_count = 0
         self.table_students_label = None
         self.table_absences_label = None
         self.selected_student: Optional[Student] = None
@@ -57,12 +58,10 @@ class Application:
         toolbar.grid(row=0, column=0, columnspan=2, sticky=tk.EW, padx=2, pady=2)
 
         toolbar_buttons = (
-            ttk.Button(toolbar, text="Create file", command=None),
-            ttk.Button(toolbar, text="Open file", command=None),
-            ttk.Button(toolbar, text="Save to file", command=None),
-            ttk.Button(toolbar, text="Open MS SQL", command=None),
-            ttk.Button(toolbar, text="Save to MS SQL", command=None),
-            ttk.Button(toolbar, text="Close data source", command=None),
+            ttk.Button(toolbar, text="Create file", command=self.create_file),
+            ttk.Button(toolbar, text="Open file", command=self.open_file),
+            ttk.Button(toolbar, text="Save file", command=self.save_file),
+            ttk.Button(toolbar, text="Open MS SQL", command=self.open_ms_sql),
             ttk.Button(toolbar, text="Search by filter", command=self.search_by_filter),
             ttk.Button(toolbar, text="Delete by filter", command=self.delete_by_filter),
             ttk.Button(toolbar, text="Add student", command=self.add_student),
@@ -79,7 +78,7 @@ class Application:
             self.table_students.column(f"#{id_title + 1}", minwidth=len(title) + 15, width=len(title) + 15)
 
         self.table_students.grid(row=0, column=0, sticky=tk.NSEW, padx=5, pady=5)
-        self.table_students.bind("<<TreeviewSelect>>", self.select_student)
+        self.table_students.bind("<<TreeviewSelect>>", self._select_student)
 
         # bottom toolbar
         table_students_buttons = ttk.Frame(students_panel)
@@ -123,13 +122,11 @@ class Application:
             self.search_criteria.page_number = self.table_students_current_page
             self.search_criteria.page_size = int(table_students_combobox.get())
             self.update_students_data()
-            self.update_students_table_label()
 
         def set_page_size_absences(event):
             self.table_absences_page_size = int(table_absences_combobox.get())
             self.table_absences_current_page = 1
             self.update_absences_data()
-            self.update_absences_table_label()
 
         table_absences_combobox = ttk.Combobox(master=table_absences_buttons, values=page_count, width=3)
         table_absences_combobox.pack(side=tk.RIGHT)
@@ -151,8 +148,36 @@ class Application:
 
         self.main_window.mainloop()
 
+    def create_file(self):
+        pass
+
+    def open_file(self):
+        self.repo = None
+        self.update_students_data()
+        self.update_absences_data()
+        # todo file
+        self.repo = FileRepository()
+        self.update_students_data()
+        self.update_absences_data()
+
+    def save_file(self):
+        pass
+
+    def open_ms_sql(self):
+        self.repo = None
+        self.update_students_data()
+        self.update_absences_data()
+
+        self.main_window.wait_window(OpenMsSqlWindow(self.main_window, self))
+
+        self.update_students_data()
+        self.update_absences_data()
+
     def add_student(self):
-        AddStudentWindow(self.main_window, self)
+        if self.repo is None:
+            tk.messagebox.showinfo(title='Error', message='Please, open data source')
+        else:
+            AddStudentWindow(self.main_window, self)
 
     def add_absence(self):
         if self.selected_student is None:
@@ -160,20 +185,27 @@ class Application:
         else:
             AddAbsenceWindow(self.main_window, self)
 
-    def select_student(self, event):
+    def _select_student(self, event):
         selection = self.table_students.item(self.table_students.focus())
         try:
-            self.selected_student = self.db_svc.get_student(uuid.UUID(selection['values'][6]))
+            self.selected_student_id = uuid.UUID(selection['values'][6])
         except IndexError:
-            print('Student selection discarded')
+            pass
+            # print('Student selection discarded')
         finally:
             self.update_absences_data()
 
     def delete_by_filter(self):
-        DeleteStudentsWindow(self.main_window, self)
+        if self.repo is None:
+            tk.messagebox.showinfo(title='Error', message='Please, open data source')
+        else:
+            DeleteStudentsWindow(self.main_window, self)
 
     def search_by_filter(self):
-        SearchStudentsWindow(self.main_window, self)
+        if self.repo is None:
+            tk.messagebox.showinfo(title='Error', message='Please, open data source')
+        else:
+            SearchStudentsWindow(self.main_window, self)
 
     def next_page_students(self) -> None:
         if self.search_criteria.page_number < self.table_students_pages_count:
@@ -195,41 +227,52 @@ class Application:
             self.table_absences_current_page = self.table_absences_current_page - 1
             self.update_absences_data()
 
-    def update_students_table_label(self):
-        self.table_students_pages_count = math.ceil(
-            self.db_svc.count_students_amount(self.search_criteria) / self.search_criteria.page_size)
-        self.table_students_label.configure(
-            text=(f"Page {self.search_criteria.page_number}/{self.table_students_pages_count}."
-                  f" Entries on page:"))
+    def _update_students_table_label(self):
+        new_text: str = "No active data source."
+
+        if self.repo is not None:
+            self.table_students_pages_count = math.ceil(
+                self.repo.count_students_amount(self.search_criteria) / self.search_criteria.page_size)
+            new_text = f"Page {self.search_criteria.page_number}/{self.table_students_pages_count}."
+
+        new_text = new_text + " Entries on page: "
+        self.table_students_label.configure(text=new_text)
         self.table_students_label.update()
 
-    def update_absences_table_label(self):
-        self.table_absences_pages_count = math.ceil(
-            self.db_svc.count_absences_amount(self.selected_student.id
-                                              if self.selected_student is not None
-                                              else None) / self.table_absences_page_size)
-        self.table_absences_label.configure(
-            text=(f"Page {self.table_absences_current_page}/{self.table_absences_pages_count}."
-                  f" Entries on page:"))
+    def _update_absences_table_label(self):
+        new_text: str = "No active data source."
+
+        if self.repo is not None:
+            self.table_absences_pages_count = math.ceil(
+                self.repo.count_absences_amount(self.selected_student.id
+                                                if self.selected_student is not None
+                                                else None) / self.table_absences_page_size)
+            new_text = f"Page {self.table_absences_current_page}/{self.table_absences_pages_count}."
+
+        new_text = new_text + " Entries on page: "
+        self.table_absences_label.configure(text=new_text)
         self.table_absences_label.update()
 
     def update_students_data(self):
         for item in self.table_students.get_children():
             self.table_students.delete(item)
 
-        for s in self.db_svc.get_students(self.search_criteria):
-            self.table_students.insert("", tk.END, values=(s.name, s.group.number,
-                                                           s.absences_sick, s.absences_other,
-                                                           s.absences_unjust, s.absences_total, s.id))
+        if self.repo is not None:
+            for s in self.repo.get_students(self.search_criteria):
+                self.table_students.insert("", tk.END, values=(s.name, s.group.number,
+                                                               s.absences_sick, s.absences_other,
+                                                               s.absences_unjust, s.absences_total, s.id))
 
-        self.update_students_table_label()
+        self._update_students_table_label()
 
     def update_absences_data(self):
         for item in self.table_absences.get_children():
             self.table_absences.delete(item)
 
-        for s in self.db_svc.get_absences(self.selected_student.id if self.selected_student is not None else None,
-                                          self.table_absences_current_page, self.table_absences_page_size):
-            self.table_absences.insert("", tk.END, values=(s.student.name, s.date, s.reason.name, s.reason.desc, s.id))
+        if self.repo is not None:
+            for s in self.repo.get_absences(self.selected_student.id if self.selected_student is not None else None,
+                                            self.table_absences_current_page, self.table_absences_page_size):
+                self.table_absences.insert("", tk.END,
+                                           values=(s.student.name, s.date, s.reason.name, s.reason.desc, s.id))
 
-        self.update_absences_table_label()
+        self._update_absences_table_label()

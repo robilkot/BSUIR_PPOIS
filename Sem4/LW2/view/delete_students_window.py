@@ -36,7 +36,7 @@ class DeleteStudentsWindow(tk.Toplevel):
         name_frame.pack(pady=10)
 
         # search by group
-        all_groups = self.application.db_svc.get_groups()
+        all_groups = self.application.db_repo.get_groups()
         groups_numbers = [str(group.number) for group in all_groups]
         self.groups_dict = {key: value for key, value in zip(groups_numbers, all_groups)}
 
@@ -80,9 +80,9 @@ class DeleteStudentsWindow(tk.Toplevel):
         search_button = ttk.Button(self, text="Delete students", command=self.delete_students)
         search_button.pack(pady=10)
 
-        self.search_by_name.set(False)
+        self.search_by_name.set(True)
         self.search_by_group.set(True)
-        self.search_by_limits.set(False)
+        self.search_by_limits.set(True)
 
         self.abs_other_min.set('0')
         self.abs_other_max.set('10')
@@ -104,7 +104,7 @@ class DeleteStudentsWindow(tk.Toplevel):
         self.application.delete_criteria.page_number = 1
         self.application.delete_criteria.criteria = limits if self.search_by_limits.get() else None
 
-        deleted_students_number = self.application.db_svc.delete_students(self.application.delete_criteria)
+        deleted_students_number = self.application.db_repo.delete_students(self.application.delete_criteria)
         tk.messagebox.showinfo(title='Success', message=f'Deleted {deleted_students_number} students')
         self.application.update_students_data()
 
