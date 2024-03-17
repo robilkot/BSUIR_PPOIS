@@ -5,10 +5,10 @@ from datetime import datetime
 from controller import search_criteria
 from controller.check_criteria import check_search_criteria
 from controller.repository import AbstractRepository
-from controller.sax_handlers.AnyHandlers import GroupAnyHandler, AbsenceReasonAnyHandler
-from controller.sax_handlers.ByCriteriaHandlers import StudentByCriteriaHandler, AbsencesByCriteriaHandler, \
+from controller.sax_handlers.any_handlers import GroupAnyHandler, AbsenceReasonAnyHandler
+from controller.sax_handlers.by_criteria_handlers import StudentByCriteriaHandler, AbsencesByCriteriaHandler, \
     AbsencesCountByStudentIdHandler
-from controller.sax_handlers.ByIdHandlers import AbsenceReasonByIdHandler, GroupByIdHandler, StudentByIdHandler
+from controller.sax_handlers.by_id_handlers import AbsenceReasonByIdHandler, GroupByIdHandler, StudentByIdHandler
 from controller.search_criteria import SearchCriteria
 from model.absence import Absence
 from model.absence_reason import AbsenceReason

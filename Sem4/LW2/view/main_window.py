@@ -37,6 +37,9 @@ class Application:
         self.main_window = tk.Tk()
         self.main_window.minsize(width=800, height=400)
         self.main_window.title("Lazy Students")
+        self.tree_view_enabled = tk.BooleanVar()
+        self.tree_view_enabled.set(False)
+        self.tree_view_enabled.trace('w', self._update_all_data)
 
         center_window(self.main_window, 1200, 600)
 
@@ -67,16 +70,14 @@ class Application:
             ttk.Button(toolbar, text="Delete by filter", command=self.delete_by_filter),
             ttk.Button(toolbar, text="Add student", command=self.add_student),
             ttk.Button(toolbar, text="Add absence", command=self.add_absence),
+            ttk.Checkbutton(toolbar, text="Treeview", variable=self.tree_view_enabled)
         )
         for index, button in enumerate(toolbar_buttons):
             button.pack(padx=2, pady=0, side=tk.LEFT)
 
         # Left side of main screen
-        table_students_columns = ("Name", "Group", "Sick abs.", "Other abs.", "Unjust abs.", "Total abs.", "Id")
-        self.table_students = ttk.Treeview(master=students_panel, columns=table_students_columns, show='headings')
-        for id_title, title in enumerate(table_students_columns):
-            self.table_students.heading(f"#{id_title + 1}", text=title)
-            self.table_students.column(f"#{id_title + 1}", minwidth=len(title) + 15, width=len(title) + 15)
+        self.table_students = ttk.Treeview(master=students_panel)
+        self._configure_students_table()
 
         self.table_students.grid(row=0, column=0, sticky=tk.NSEW, padx=5, pady=5)
         self.table_students.bind("<<TreeviewSelect>>", self._select_student)
@@ -93,11 +94,8 @@ class Application:
         table_students_prev_page_btn.pack(padx=3, pady=2, side=tk.RIGHT)
 
         # Right side of main screen
-        table_absences_columns = ("Student", "Date", "Reason", "Reason description", "Id")
-        self.table_absences = ttk.Treeview(master=absences_panel, columns=table_absences_columns, show='headings')
-        for id_title, title in enumerate(table_absences_columns):
-            self.table_absences.heading(f"#{id_title + 1}", text=title)
-            self.table_absences.column(f"#{id_title + 1}", minwidth=len(title) + 10, width=len(title) + 10)
+        self.table_absences = ttk.Treeview(master=absences_panel)
+        self._configure_absences_table()
 
         # make desc column wider
         self.table_absences.column("#4", minwidth=80, width=100)
@@ -149,6 +147,34 @@ class Application:
 
         self.main_window.mainloop()
 
+    def _update_all_data(self, a = None, b = None, c = None):
+        self.update_students_data()
+        self.update_absences_data()
+
+    def _configure_students_table(self):
+        table_students_columns = ("Name", "Group", "Sick abs.", "Other abs.", "Unjust abs.", "Total abs.", "Id")
+        self.table_students.configure(columns=table_students_columns, show='headings')
+        for id_title, title in enumerate(table_students_columns):
+            self.table_students.heading(f"#{id_title + 1}", text=title)
+            self.table_students.column(f"#{id_title + 1}", minwidth=len(title) + 15, width=len(title) + 15)
+
+    def _configure_students_tree(self):
+        self.table_students.configure(show='tree', columns=['Key', 'Value'])
+        self.table_students.column("#0", minwidth=100, width=100)
+        self.table_students.column("#1", minwidth=300, width=300)
+
+    def _configure_absences_table(self):
+        table_absences_columns = ("Student", "Date", "Reason", "Reason description", "Id")
+        self.table_absences.configure(columns=table_absences_columns, show='headings')
+        for id_title, title in enumerate(table_absences_columns):
+            self.table_absences.heading(f"#{id_title + 1}", text=title)
+            self.table_absences.column(f"#{id_title + 1}", minwidth=len(title) + 10, width=len(title) + 10)
+
+    def _configure_absences_tree(self):
+        self.table_absences.configure(show='tree', columns=['Key', 'Value'])
+        self.table_absences.column("#0", minwidth=100, width=100)
+        self.table_absences.column("#1", minwidth=300, width=300)
+
     def create_file(self):
         self.close_data_source()
 
@@ -157,8 +183,7 @@ class Application:
         if f is not None:
             self.repo = FileRepository(f.name)
             self.repo.initialize_file()
-            self.update_students_data()
-            self.update_absences_data()
+            self._update_all_data()
 
     def open_file(self):
         self.close_data_source()
@@ -167,21 +192,18 @@ class Application:
 
         if filename is not None and len(filename) > 0:
             self.repo = FileRepository(filename)
-            self.update_students_data()
-            self.update_absences_data()
+            self._update_all_data()
 
     def open_ms_sql(self):
         self.close_data_source()
 
         self.main_window.wait_window(OpenMsSqlWindow(self.main_window, self))
 
-        self.update_students_data()
-        self.update_absences_data()
+        self._update_all_data()
 
     def close_data_source(self):
         self.repo = None
-        self.update_students_data()
-        self.update_absences_data()
+        self._update_all_data()
 
     def add_student(self):
         if self.repo is None:
@@ -198,7 +220,13 @@ class Application:
     def _select_student(self, event):
         selection = self.table_students.item(self.table_students.focus())
         try:
-            self.selected_student_id = uuid.UUID(selection['values'][6])
+            if self.tree_view_enabled.get():
+                if selection['text'] == 'Student':
+                    for child in self.table_students.get_children(self.table_students.focus()):
+                        if self.table_students.item(child)['text'] == 'id':
+                            self.selected_student_id = uuid.UUID(self.table_students.item(child)['values'][0])
+            else:
+                self.selected_student_id = uuid.UUID(selection['values'][6])
         except IndexError:
             pass
             # print('Student selection discarded')
@@ -268,10 +296,28 @@ class Application:
             self.table_students.delete(item)
 
         if self.repo is not None:
-            for s in self.repo.get_students(self.search_criteria):
-                self.table_students.insert("", tk.END, values=(s.name, s.group.number,
-                                                               s.absences_sick, s.absences_other,
-                                                               s.absences_unjust, s.absences_total, s.id))
+            if self.tree_view_enabled.get():
+                self._configure_students_tree()
+                for s in self.repo.get_students(self.search_criteria):
+                    stud = self.table_students.insert("", tk.END, text='Student')
+
+                    self.table_students.insert(stud, tk.END, text='id', values=s.id)
+                    self.table_students.insert(stud, tk.END, text='name', values=s.name)
+                    self.table_students.insert(stud, tk.END, text='sick abs.', values=s.absences_sick)
+                    self.table_students.insert(stud, tk.END, text='other abs.', values=s.absences_other)
+                    self.table_students.insert(stud, tk.END, text='unjust abs.', values=s.absences_unjust)
+                    self.table_students.insert(stud, tk.END, text='total abs.', values=s.absences_total)
+
+                    group = self.table_students.insert(stud, tk.END, text='Group')
+                    self.table_students.insert(group, tk.END, text='id', values=s.group.id)
+                    self.table_students.insert(group, tk.END, text='number', values=s.group.number)
+            else:
+                self._configure_students_table()
+
+                for s in self.repo.get_students(self.search_criteria):
+                    self.table_students.insert("", tk.END, values=(s.name, s.group.number,
+                                                                   s.absences_sick, s.absences_other,
+                                                                   s.absences_unjust, s.absences_total, s.id))
 
         self._update_students_table_label()
 
@@ -280,9 +326,24 @@ class Application:
             self.table_absences.delete(item)
 
         if self.repo is not None:
-            for s in self.repo.get_absences(self.selected_student_id,
-                                            self.table_absences_current_page, self.table_absences_page_size):
-                self.table_absences.insert("", tk.END,
-                                           values=(s.student.name, s.date, s.reason.name, s.reason.desc, s.id))
+            if self.tree_view_enabled.get():
+                self._configure_absences_tree()
+                for s in self.repo.get_absences(self.selected_student_id,
+                                                self.table_absences_current_page, self.table_absences_page_size):
+                    absence = self.table_absences.insert("", tk.END, text='Absence')
+
+                    self.table_absences.insert(absence, tk.END, text='id', values=s.id)
+                    self.table_absences.insert(absence, tk.END, text='reason', values=[s.reason.name])
+                    self.table_absences.insert(absence, tk.END, text='description', values=[s.reason.desc])
+
+                    stud = self.table_absences.insert(absence, tk.END, text='Student')
+                    self.table_absences.insert(stud, tk.END, text='id', values=s.student.id)
+                    self.table_absences.insert(stud, tk.END, text='id', values=[s.student.name])
+            else:
+                self._configure_absences_table()
+                for s in self.repo.get_absences(self.selected_student_id,
+                                                self.table_absences_current_page, self.table_absences_page_size):
+                    self.table_absences.insert("", tk.END,
+                                               values=(s.student.name, s.date, s.reason.name, s.reason.desc, s.id))
 
         self._update_absences_table_label()
