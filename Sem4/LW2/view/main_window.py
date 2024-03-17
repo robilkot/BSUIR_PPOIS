@@ -203,6 +203,9 @@ class Application:
 
     def close_data_source(self):
         self.repo = None
+        self.search_criteria = SearchCriteria()
+        self.delete_criteria = SearchCriteria()
+        self.table_absences_current_page = 1
         self._update_all_data()
 
     def add_student(self):
@@ -302,7 +305,7 @@ class Application:
                     stud = self.table_students.insert("", tk.END, text='Student')
 
                     self.table_students.insert(stud, tk.END, text='id', values=s.id)
-                    self.table_students.insert(stud, tk.END, text='name', values=s.name)
+                    self.table_students.insert(stud, tk.END, text='name', values=[s.name])
                     self.table_students.insert(stud, tk.END, text='sick abs.', values=s.absences_sick)
                     self.table_students.insert(stud, tk.END, text='other abs.', values=s.absences_other)
                     self.table_students.insert(stud, tk.END, text='unjust abs.', values=s.absences_unjust)

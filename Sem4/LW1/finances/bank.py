@@ -17,7 +17,7 @@ class Bank:
         self.__cards.remove(card)
 
     def get_cards(self) -> list[CreditCard]:
-        return self.__cards
+        return self.__cards.copy()
 
     def transfer(self, sender_card: CreditCard, receiver_card: CreditCard, pin: int, amount: int) -> None:
         if sender_card not in self.__cards or receiver_card not in self.__cards:
