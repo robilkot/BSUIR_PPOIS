@@ -13,16 +13,26 @@ from controller.search_criteria import SearchCriteria
 class DbService:
     debug_queries: bool = False
 
-    def __init__(self):
-        self.conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost,'
-                                   '1433;DATABASE=Students;UID=SA;PWD=StudentsDb123$')
+    def __init__(self, connection_string: str):
+        self.conn = pyodbc.connect(connection_string)
+
+    def __del__(self):
+        self.conn.close()
 
     def count_students_amount(self, search_criteria: SearchCriteria) -> int:
-        pass
+        old_page_size = search_criteria.page_size
+        search_criteria.page_size = 0
+        # todo: sql count()
+        students = self.get_students(search_criteria)
 
-    # todo: implement
-    def count_absences_amount(self, search_criteria: SearchCriteria) -> int:
-        pass
+        search_criteria.page_size = old_page_size
+        return len(students)
+
+    def count_absences_amount(self, student_id: Optional[uuid.UUID]) -> int:
+        # todo: sql count()
+        absences = self.get_absences(student_id, 1, 0)
+
+        return len(absences)
 
     def count_absences(self, student: Student):
         cursor = self.conn.cursor()
@@ -63,11 +73,36 @@ class DbService:
         cursor.execute(query, student_id)
         self.conn.commit()
 
-    def get_students(self, search_criteria: SearchCriteria) -> list[Student]:
-        def check_search_criteria(stud: Student) -> bool:
-            for term in search_criteria.criteria[0]:
-                limit_min = search_criteria.criteria[0][term][0]
-                limit_max = search_criteria.criteria[0][term][1]
+    @staticmethod
+    def _build_get_students_query(search_criteria: SearchCriteria) -> str:
+        query = 'SELECT * FROM Students'
+
+        query_has_where_statement: bool = False
+
+        if search_criteria.group is not None:
+            query_has_where_statement = True
+            query += f" where GroupId = '{search_criteria.group.id}'"
+
+        if search_criteria.name is not None:
+            if query_has_where_statement:
+                query += f" and"
+            else:
+                query += f" where"
+
+            query += f" Name = '{search_criteria.name}'"
+
+        if search_criteria.page_size != 0:
+            query += (f" ORDER BY Name OFFSET {(search_criteria.page_number - 1) * search_criteria.page_size}"
+                      f" ROWS FETCH NEXT {search_criteria.page_size} ROWS ONLY")
+
+        return query
+
+    @staticmethod
+    def _check_search_criteria(stud: Student, search_criteria: SearchCriteria) -> bool:
+        if search_criteria.criteria is not None:
+            for term in search_criteria.criteria:
+                limit_min = search_criteria.criteria[term][0]
+                limit_max = search_criteria.criteria[term][1]
                 match term:
                     case 'sick':
                         if stud.absences_sick > limit_max or stud.absences_sick < limit_min:
@@ -78,30 +113,13 @@ class DbService:
                     case 'unjust':
                         if stud.absences_unjust > limit_max or stud.absences_unjust < limit_min:
                             return False
-            return True
+        return True
 
+    def get_students(self, search_criteria: SearchCriteria) -> list[Student]:
         students = list[Student]()
         cursor = self.conn.cursor()
 
-        query: str = 'SELECT * FROM Students'
-
-        query_has_where_statement: bool = False
-
-        if search_criteria.group[0] is not None:
-            query_has_where_statement = True
-            query += f" where GroupId = '{search_criteria.group[0].id}'"
-
-        if search_criteria.name[0] is not None:
-            if query_has_where_statement:
-                query += f" and"
-            else:
-                query += f" where"
-
-            query += f" Name = '{search_criteria.name}'"
-
-        if search_criteria.page_size != 0:
-            query += (f" ORDER BY Name OFFSET {(search_criteria.page_number[0] - 1) * search_criteria.page_size}"
-                      f" ROWS FETCH NEXT {search_criteria.page_size} ROWS ONLY")
+        query = self._build_get_students_query(search_criteria)
 
         if DbService.debug_queries:
             print(query)
@@ -112,7 +130,7 @@ class DbService:
             student_group = self.get_group(row[2])
             student = Student(row[0], row[1], student_group, 0, 0, 0, 0)
             self.count_absences(student)
-            if check_search_criteria(student):
+            if self._check_search_criteria(student, search_criteria):
                 students.append(student)
 
         return students
@@ -268,3 +286,23 @@ class DbService:
             absences.append(absence)
 
         return absences
+
+    def delete_absence(self, id: uuid.UUID) -> None:
+        cursor = self.conn.cursor()
+        query = f'DELETE FROM Absences where Id = ?;'
+
+        if DbService.debug_queries:
+            print(query)
+
+        cursor.execute(query, id)
+        self.conn.commit()
+
+    def add_absence(self, student_id: uuid.UUID, reason_id: uuid.UUID) -> None:
+        cursor = self.conn.cursor()
+        query = f'INSERT INTO Absences (Id, Date, StudentId, ReasonId) VALUES (NEWID(), GETDATE(), ?, ?);'
+
+        if DbService.debug_queries:
+            print(query)
+
+        cursor.execute(query, student_id, reason_id)
+        self.conn.commit()

@@ -1,11 +1,11 @@
-from typing import Optional
 from model.group import Group
 
 
 class SearchCriteria:
-    def __init__(self, group: Optional[Group], name: Optional[str], criteria: dict, page_number: int, page_size: int):
-        self.group = group,
-        self.name = name,
-        self.criteria = criteria,
-        self.page_number = page_number,
-        self.page_size = page_size
+    def __init__(self, group: Group | None = None, name: str | None = None,
+                 criteria: dict | None = None, page_number: int = 1, page_size: int = 10):
+        self.group = group
+        self.name = name
+        self.criteria = criteria
+        self.page_number: int = page_number
+        self.page_size: int = page_size
