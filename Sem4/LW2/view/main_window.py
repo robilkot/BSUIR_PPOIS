@@ -5,6 +5,7 @@ import tkinter as tk
 import uuid
 from tkinter import ttk
 from tkinter.messagebox import showerror, showwarning, showinfo
+from tkinter import filedialog as fd
 from typing import Optional
 
 from controller.file_repository import FileRepository
@@ -29,7 +30,7 @@ class Application:
         self.table_absences_pages_count = 0
         self.table_students_label = None
         self.table_absences_label = None
-        self.selected_student: Optional[Student] = None
+        self.selected_student_id: uuid.UUID | None = None
         self.search_criteria = SearchCriteria()
         self.delete_criteria = SearchCriteria()
 
@@ -60,8 +61,8 @@ class Application:
         toolbar_buttons = (
             ttk.Button(toolbar, text="Create file", command=self.create_file),
             ttk.Button(toolbar, text="Open file", command=self.open_file),
-            ttk.Button(toolbar, text="Save file", command=self.save_file),
             ttk.Button(toolbar, text="Open MS SQL", command=self.open_ms_sql),
+            ttk.Button(toolbar, text="Close data source", command=self.close_data_source),
             ttk.Button(toolbar, text="Search by filter", command=self.search_by_filter),
             ttk.Button(toolbar, text="Delete by filter", command=self.delete_by_filter),
             ttk.Button(toolbar, text="Add student", command=self.add_student),
@@ -149,27 +150,36 @@ class Application:
         self.main_window.mainloop()
 
     def create_file(self):
-        pass
+        self.close_data_source()
+
+        f = fd.asksaveasfile(initialfile='Students.xml', defaultextension=".xml", filetypes={('XML files', '*.xml')})
+
+        if f is not None:
+            self.repo = FileRepository(f.name)
+            self.repo.initialize_file()
+            self.update_students_data()
+            self.update_absences_data()
 
     def open_file(self):
-        self.repo = None
-        self.update_students_data()
-        self.update_absences_data()
-        # todo file
-        self.repo = FileRepository()
-        self.update_students_data()
-        self.update_absences_data()
+        self.close_data_source()
 
-    def save_file(self):
-        pass
+        filename = fd.askopenfilename(title='Open XML file', filetypes={('XML files', '*.xml')})
+
+        if filename is not None and len(filename) > 0:
+            self.repo = FileRepository(filename)
+            self.update_students_data()
+            self.update_absences_data()
 
     def open_ms_sql(self):
-        self.repo = None
-        self.update_students_data()
-        self.update_absences_data()
+        self.close_data_source()
 
         self.main_window.wait_window(OpenMsSqlWindow(self.main_window, self))
 
+        self.update_students_data()
+        self.update_absences_data()
+
+    def close_data_source(self):
+        self.repo = None
         self.update_students_data()
         self.update_absences_data()
 
@@ -180,7 +190,7 @@ class Application:
             AddStudentWindow(self.main_window, self)
 
     def add_absence(self):
-        if self.selected_student is None:
+        if self.selected_student_id is None:
             tk.messagebox.showinfo(title='Error', message='Please, select student')
         else:
             AddAbsenceWindow(self.main_window, self)
@@ -244,8 +254,8 @@ class Application:
 
         if self.repo is not None:
             self.table_absences_pages_count = math.ceil(
-                self.repo.count_absences_amount(self.selected_student.id
-                                                if self.selected_student is not None
+                self.repo.count_absences_amount(self.selected_student_id
+                                                if self.selected_student_id is not None
                                                 else None) / self.table_absences_page_size)
             new_text = f"Page {self.table_absences_current_page}/{self.table_absences_pages_count}."
 
@@ -270,7 +280,7 @@ class Application:
             self.table_absences.delete(item)
 
         if self.repo is not None:
-            for s in self.repo.get_absences(self.selected_student.id if self.selected_student is not None else None,
+            for s in self.repo.get_absences(self.selected_student_id,
                                             self.table_absences_current_page, self.table_absences_page_size):
                 self.table_absences.insert("", tk.END,
                                            values=(s.student.name, s.date, s.reason.name, s.reason.desc, s.id))

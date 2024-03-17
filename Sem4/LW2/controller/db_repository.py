@@ -3,6 +3,7 @@ import uuid
 
 from typing import Optional
 
+from controller.check_criteria import check_search_criteria
 from controller.repository import AbstractRepository
 from model.absence import Absence
 from model.absence_reason import AbsenceReason
@@ -19,21 +20,6 @@ class DbRepository(AbstractRepository):
 
     def __del__(self):
         self.conn.close()
-
-    def count_students_amount(self, search_criteria: SearchCriteria) -> int:
-        old_page_size = search_criteria.page_size
-        search_criteria.page_size = 0
-        # todo: sql count()
-        students = self.get_students(search_criteria)
-
-        search_criteria.page_size = old_page_size
-        return len(students)
-
-    def count_absences_amount(self, student_id: Optional[uuid.UUID]) -> int:
-        # todo: sql count()
-        absences = self.get_absences(student_id, 1, 0)
-
-        return len(absences)
 
     def _count_student_absences(self, student: Student):
         cursor = self.conn.cursor()
@@ -98,24 +84,6 @@ class DbRepository(AbstractRepository):
 
         return query
 
-    @staticmethod
-    def _check_search_criteria(stud: Student, search_criteria: SearchCriteria) -> bool:
-        if search_criteria.criteria is not None:
-            for term in search_criteria.criteria:
-                limit_min = search_criteria.criteria[term][0]
-                limit_max = search_criteria.criteria[term][1]
-                match term:
-                    case 'sick':
-                        if stud.absences_sick > limit_max or stud.absences_sick < limit_min:
-                            return False
-                    case 'other':
-                        if stud.absences_other > limit_max or stud.absences_other < limit_min:
-                            return False
-                    case 'unjust':
-                        if stud.absences_unjust > limit_max or stud.absences_unjust < limit_min:
-                            return False
-        return True
-
     def get_students(self, search_criteria: SearchCriteria) -> list[Student]:
         students = list[Student]()
         cursor = self.conn.cursor()
@@ -131,7 +99,7 @@ class DbRepository(AbstractRepository):
             student_group = self.get_group(row[2])
             student = Student(row[0], row[1], student_group, 0, 0, 0, 0)
             self._count_student_absences(student)
-            if self._check_search_criteria(student, search_criteria):
+            if check_search_criteria(student, search_criteria):
                 students.append(student)
 
         return students
@@ -146,7 +114,8 @@ class DbRepository(AbstractRepository):
         cursor.execute(query, student_id)
         row = cursor.fetchone()
 
-        student_group = self.get_group(row[2])
+        # warning: this doesn't get actual group since we don't need it
+        student_group = None  # self.get_group(row[2])
         student = Student(row[0], row[1], student_group, 0, 0, 0, 0)
         self._count_student_absences(student)
 
@@ -288,14 +257,14 @@ class DbRepository(AbstractRepository):
 
         return absences
 
-    def delete_absence(self, id: uuid.UUID) -> None:
+    def delete_absence(self, absence_id: uuid.UUID) -> None:
         cursor = self.conn.cursor()
         query = f'DELETE FROM Absences where Id = ?;'
 
         if DbRepository.debug_queries:
             print(query)
 
-        cursor.execute(query, id)
+        cursor.execute(query, absence_id)
         self.conn.commit()
 
     def add_absence(self, student_id: uuid.UUID, reason_id: uuid.UUID) -> None:
@@ -307,3 +276,17 @@ class DbRepository(AbstractRepository):
 
         cursor.execute(query, student_id, reason_id)
         self.conn.commit()
+
+    def count_students_amount(self, search_criteria: SearchCriteria) -> int:
+        old_page_size = search_criteria.page_size
+        search_criteria.page_size = 0
+        # sql count() would be better
+        students = self.get_students(search_criteria)
+
+        search_criteria.page_size = old_page_size
+        return len(students)
+
+    def count_absences_amount(self, student_id: Optional[uuid.UUID]) -> int:
+        # sql count() would be better
+        absences = self.get_absences(student_id, 1, 0)
+        return len(absences)

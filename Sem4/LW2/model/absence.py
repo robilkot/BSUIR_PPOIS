@@ -5,7 +5,7 @@ from model.student import Student
 
 
 class Absence:
-    def __init__(self, id: uuid.UUID, date: datetime, student: Student, reason: AbsenceReason):
+    def __init__(self, id: uuid.UUID, date: datetime.date, student: Student, reason: AbsenceReason):
         self.id = id
         self.reason = reason
         self.student = student

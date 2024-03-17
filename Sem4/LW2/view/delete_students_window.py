@@ -36,7 +36,7 @@ class DeleteStudentsWindow(tk.Toplevel):
         name_frame.pack(pady=10)
 
         # search by group
-        all_groups = self.application.db_repo.get_groups()
+        all_groups = self.application.repo.get_groups()
         groups_numbers = [str(group.number) for group in all_groups]
         self.groups_dict = {key: value for key, value in zip(groups_numbers, all_groups)}
 
@@ -45,7 +45,8 @@ class DeleteStudentsWindow(tk.Toplevel):
         group_checkbox.pack(side=tk.LEFT)
 
         self.group_combobox = ttk.Combobox(group_frame, values=groups_numbers)
-        self.group_combobox.set(groups_numbers[0])
+        if len(groups_numbers) > 0:
+            self.group_combobox.set(groups_numbers[0])
         self.group_combobox.pack(side=tk.RIGHT)
         group_frame.pack(pady=10)
 
@@ -91,6 +92,10 @@ class DeleteStudentsWindow(tk.Toplevel):
         self.abs_unjust_min.set('0')
         self.abs_unjust_max.set('10')
 
+        if len(groups_numbers) == 0:
+            tk.messagebox.showinfo(title='Error', message='No groups found')
+            self.destroy()
+
     def delete_students(self):
         limits = {
             'sick': [int(self.abs_sick_min.get()), int(self.abs_sick_max.get())],
@@ -104,7 +109,7 @@ class DeleteStudentsWindow(tk.Toplevel):
         self.application.delete_criteria.page_number = 1
         self.application.delete_criteria.criteria = limits if self.search_by_limits.get() else None
 
-        deleted_students_number = self.application.db_repo.delete_students(self.application.delete_criteria)
+        deleted_students_number = self.application.repo.delete_students(self.application.delete_criteria)
         tk.messagebox.showinfo(title='Success', message=f'Deleted {deleted_students_number} students')
         self.application.update_students_data()
 
