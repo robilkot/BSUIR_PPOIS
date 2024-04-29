@@ -271,26 +271,32 @@ class Application:
     def _update_students_table_label(self):
         new_text: str = "No active data source."
 
+        students_amount = 0
+
         if self.repo is not None:
+            students_amount = self.repo.count_students_amount(self.search_criteria)
             self.table_students_pages_count = math.ceil(
-                self.repo.count_students_amount(self.search_criteria) / self.search_criteria.page_size)
+                students_amount / self.search_criteria.page_size)
             new_text = f"Page {self.search_criteria.page_number}/{self.table_students_pages_count}."
 
-        new_text = new_text + " Entries on page: "
+        new_text = new_text + f" Total entries: {students_amount}. Entries on page: "
         self.table_students_label.configure(text=new_text)
         self.table_students_label.update()
 
     def _update_absences_table_label(self):
         new_text: str = "No active data source."
 
+        students_amount = 0
+
         if self.repo is not None:
-            self.table_absences_pages_count = math.ceil(
-                self.repo.count_absences_amount(self.selected_student_id
-                                                if self.selected_student_id is not None
-                                                else None) / self.table_absences_page_size)
+            students_amount = self.repo.count_absences_amount(self.selected_student_id
+                                                              if self.selected_student_id is not None
+                                                              else None)
+            self.table_absences_pages_count = math.ceil(students_amount
+                                                        / self.table_absences_page_size)
             new_text = f"Page {self.table_absences_current_page}/{self.table_absences_pages_count}."
 
-        new_text = new_text + " Entries on page: "
+        new_text = new_text + f" Total entries: {students_amount}. Entries on page: "
         self.table_absences_label.configure(text=new_text)
         self.table_absences_label.update()
 
