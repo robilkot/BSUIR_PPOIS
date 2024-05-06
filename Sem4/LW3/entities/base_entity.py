@@ -3,7 +3,7 @@ import pygame
 from pygame import Surface, Rect
 from pygame.math import Vector2
 
-from engine.physics import wrap_position
+from engine.helpers import wrap_position
 
 
 class BaseEntity:
@@ -11,9 +11,10 @@ class BaseEntity:
                  position: tuple | Vector2,
                  sprite: Surface,
                  velocity: tuple | Vector2):
+        self.mass = 100
         self.position = Vector2(position)
         self.sprite = sprite
-        self.radius = sprite.get_width() / 2
+        self.radius = sprite.get_width() / 2 * 0.8
         self.velocity = Vector2(velocity)
 
     def draw(self, surface: Surface):
@@ -26,4 +27,5 @@ class BaseEntity:
 
     def collides_with(self, other_obj: BaseEntity) -> bool:
         distance = self.position.distance_to(other_obj.position)
-        return distance < self.radius + other_obj.radius
+        collision = distance < self.radius + other_obj.radius
+        return collision

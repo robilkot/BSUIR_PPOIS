@@ -7,11 +7,14 @@
     <list default="true" id="693ff3ba-e483-4afc-beb9-39276f3133db" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assteroids.py" beforeDir="false" afterPath="$PROJECT_DIR$/assteroids.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/engine/physics.py" beforeDir="false" afterPath="$PROJECT_DIR$/engine/physics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/entities/asteroid.py" beforeDir="false" afterPath="$PROJECT_DIR$/entities/asteroid.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/entities/asteroid_large.py" beforeDir="false" afterPath="$PROJECT_DIR$/entities/asteroid_large.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/entities/asteroid_medium.py" beforeDir="false" afterPath="$PROJECT_DIR$/entities/asteroid_medium.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/entities/asteroid_small.py" beforeDir="false" afterPath="$PROJECT_DIR$/entities/asteroid_small.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/entities/base_entity.py" beforeDir="false" afterPath="$PROJECT_DIR$/entities/base_entity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/entities/bullet.py" beforeDir="false" afterPath="$PROJECT_DIR$/entities/bullet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/entities/player.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/entities/spaceship.py" beforeDir="false" afterPath="$PROJECT_DIR$/entities/spaceship.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,21 +43,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/work/BSUIR/PPOIS/Sem4/LW3&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/work/BSUIR/PPOIS/Sem4/LW3",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\work\BSUIR\PPOIS\Sem4\LW3\entities" />
@@ -116,6 +119,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/LW3$main.coverage" NAME="main Coverage Results" MODIFIED="1714992473582" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/LW3$main.coverage" NAME="main Coverage Results" MODIFIED="1715027334406" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

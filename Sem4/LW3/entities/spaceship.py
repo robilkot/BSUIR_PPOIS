@@ -4,14 +4,17 @@ from pygame import Vector2
 from engine.repository import load_sprite
 from entities.base_entity import BaseEntity
 from engine.graphics import rotate_image
+from entities.bullet import Bullet
 
 
 class Spaceship(BaseEntity):
     # todo: config
+    BulletSpeed = 3
     RotationSpeed = 5
-    Acceleration = 0.25
+    Acceleration = 0.2
 
-    def __init__(self, position, size):
+    def __init__(self, position, size, create_bullet_callback):
+        self.create_bullet_callback = create_bullet_callback
         self.direction = Vector2((0, -1))
         self.original_sprite = load_sprite("spaceship", True, size)
 
@@ -34,3 +37,8 @@ class Spaceship(BaseEntity):
                                          angle)
 
         surface.blit(self.sprite, rect)
+
+    def shoot(self):
+        bullet_velocity = self.direction * self.BulletSpeed + self.velocity
+        bullet = Bullet(self.position, bullet_velocity)
+        self.create_bullet_callback(bullet)
