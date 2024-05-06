@@ -1,5 +1,10 @@
+import random
+
 import pygame
 
+from entities.asteroid_large import AssteroidLarge
+from entities.asteroid_medium import AssteroidMedium
+from entities.asteroid_small import AssteroidSmall
 from entities.base_entity import BaseEntity
 from entities.spaceship import Spaceship
 
@@ -13,6 +18,11 @@ class Assteroids:
         self.spaceship = Spaceship((400, 300), (32, 32))
 
         self.entities.append(self.spaceship)
+        for _ in range(0, 15):
+            self.entities.append(AssteroidSmall((random.randrange(0, 800),
+                                                 random.randrange(0, 600)),
+                                                (random.randrange(-30, 30) / 30,
+                                                 random.randrange(-30, 30) / 30)))
 
     def main_loop(self):
         while True:

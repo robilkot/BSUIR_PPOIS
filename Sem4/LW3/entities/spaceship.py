@@ -8,7 +8,7 @@ from engine.graphics import rotate_image
 
 class Spaceship(BaseEntity):
     # todo: config
-    RotationSpeed = 4
+    RotationSpeed = 5
     Acceleration = 0.25
 
     def __init__(self, position, size):

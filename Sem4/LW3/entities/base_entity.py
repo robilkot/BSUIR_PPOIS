@@ -8,9 +8,9 @@ from engine.physics import wrap_position
 
 class BaseEntity:
     def __init__(self,
-                 position: tuple[int, int] | Vector2,
+                 position: tuple | Vector2,
                  sprite: Surface,
-                 velocity: tuple[int, int] | Vector2):
+                 velocity: tuple | Vector2):
         self.position = Vector2(position)
         self.sprite = sprite
         self.radius = sprite.get_width() / 2
