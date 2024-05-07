@@ -10,6 +10,7 @@ class AssteroidMedium(Assteroid):
 
     def __init__(self, position, velocity, destroy_assteroid_callback, create_assteroid_callback):
         self.mass = 400
+        self.score = 50
         sprite_name = random.choice(self.MediumAssteroidsNames)
         self.original_sprite = load_sprite(sprite_name, True, (32, 32))
 

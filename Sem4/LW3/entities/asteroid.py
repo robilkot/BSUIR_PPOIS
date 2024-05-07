@@ -8,7 +8,8 @@ from entities.base_entity import BaseEntity
 
 class Assteroid(BaseEntity):
     def __init__(self, position, sprite: Surface, velocity, destroy_assteroid_callback, create_assteroid_callback):
-        self.mass = 2
+        self.mass = 200
+        self.score = 50
         self.destroy_assteroid_callback = destroy_assteroid_callback
         self.create_assteroid_callback = create_assteroid_callback
 

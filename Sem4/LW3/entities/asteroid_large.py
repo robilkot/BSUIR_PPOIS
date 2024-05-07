@@ -10,6 +10,7 @@ class AssteroidLarge(Assteroid):
 
     def __init__(self, position, velocity, destroy_assteroid_callback, create_assteroid_callback):
         self.mass = 600
+        self.score = 100
         sprite_name = random.choice(self.LargeAssteroidsNames)
         self.original_sprite = load_sprite(sprite_name, True, (64, 64))
 

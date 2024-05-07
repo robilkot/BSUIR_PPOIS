@@ -9,6 +9,7 @@ class AssteroidSmall(Assteroid):
 
     def __init__(self, position, velocity, destroy_assteroid_callback, create_assteroid_callback):
         self.mass = 200
+        self.score = 20
         sprite_name = random.choice(self.SmallAssteroidsNames)
         self.original_sprite = load_sprite(sprite_name, True, (16, 16))
 

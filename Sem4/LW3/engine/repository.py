@@ -1,6 +1,7 @@
 import pygame
 from pygame import Surface
 from pygame.image import load
+from pygame.mixer import Sound
 
 
 def load_sprite(name, with_alpha=True, size: tuple[int, int] | None = None) -> Surface:
@@ -12,3 +13,8 @@ def load_sprite(name, with_alpha=True, size: tuple[int, int] | None = None) -> S
         return loaded_sprite.convert_alpha()
     else:
         return loaded_sprite.convert()
+
+
+def load_sound(name):
+    path = f"assets/sounds/{name}.mp3"
+    return Sound(path)
