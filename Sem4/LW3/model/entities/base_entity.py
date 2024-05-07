@@ -3,7 +3,7 @@ import pygame
 from pygame import Surface, Rect
 from pygame.math import Vector2
 
-from engine.helpers import wrap_position
+from helpers.helpers import wrap_position
 
 
 class BaseEntity:

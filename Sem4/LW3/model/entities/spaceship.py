@@ -1,10 +1,10 @@
 import pygame
 from pygame import Vector2
 
-from engine.repository import load_sprite, load_sound
-from entities.base_entity import BaseEntity
-from engine.graphics import rotate_image
-from entities.bullet import Bullet
+from model.repository import load_sprite, load_sound
+from model.entities.base_entity import BaseEntity
+from view.graphics import rotate_image
+from model.entities.bullet import Bullet
 
 
 class Spaceship(BaseEntity):

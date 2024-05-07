@@ -16,8 +16,3 @@ def rotate_image(image, pos, origin_relative, angle) -> (Surface, Rect):
     rotated_image_rect = rotated_image.get_rect(center=rotated_image_center)
 
     return rotated_image, rotated_image_rect
-
-
-def print_text(surface, text, font, rect, color=Color("white")):
-    text_surface = font.render(text, True, color)
-    surface.blit(text_surface, rect)

@@ -1,9 +1,9 @@
 import random
 
-from pygame import Vector2, Surface
+from pygame import Surface
 
-from engine.graphics import rotate_image
-from entities.base_entity import BaseEntity
+from view.graphics import rotate_image
+from model.entities.base_entity import BaseEntity
 
 
 class Assteroid(BaseEntity):

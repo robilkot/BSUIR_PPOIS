@@ -1,5 +1,5 @@
-from engine.repository import load_sprite
-from entities.base_entity import BaseEntity
+from model.repository import load_sprite
+from model.entities.base_entity import BaseEntity
 
 
 class Bullet(BaseEntity):

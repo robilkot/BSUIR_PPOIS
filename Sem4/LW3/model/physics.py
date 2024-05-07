@@ -1,9 +1,6 @@
-from pygame import Vector2
-
-from entities.base_entity import BaseEntity
+from model.entities.base_entity import BaseEntity
 
 
-# todo optimise
 def process_collisions(entities: list[BaseEntity]):
     for ent1 in entities:
         for ent2 in entities:

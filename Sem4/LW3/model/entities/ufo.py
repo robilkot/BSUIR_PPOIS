@@ -3,10 +3,10 @@ import random
 import pygame
 from pygame import Vector2, Surface
 
-from engine.repository import load_sprite, load_sound
-from entities.base_entity import BaseEntity
-from entities.bullet import Bullet
-from entities.spaceship import Spaceship
+from model.repository import load_sprite, load_sound
+from model.entities.base_entity import BaseEntity
+from model.entities.bullet import Bullet
+from model.entities.spaceship import Spaceship
 
 
 class Ufo(BaseEntity):

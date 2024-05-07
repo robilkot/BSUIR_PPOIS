@@ -1,7 +1,7 @@
 import random
 
-from engine.repository import load_sprite
-from entities.asteroid import Assteroid
+from model.repository import load_sprite
+from model.entities.asteroid import Assteroid
 
 
 class AssteroidSmall(Assteroid):
