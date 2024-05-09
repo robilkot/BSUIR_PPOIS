@@ -79,7 +79,7 @@ class AssteroidsView(EventListener):
             entity.draw(self.screen)
 
         welcome_label = self.large_font.render(
-            'Welcome to Assteroids',
+            'Welcome to Asteroids',
             True, (255, 255, 255))
         self.screen.blit(welcome_label, (100, 100))
 

@@ -6,7 +6,7 @@ import view.game_view
 import controller.game_controller
 
 if __name__ == '__main__':
-    pygame.display.set_caption("Assteroids")
+    pygame.display.set_caption("Asteroids")
     pygame.display.set_mode((1200, 800))
     pygame.mixer.init()
 
