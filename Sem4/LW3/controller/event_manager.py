@@ -35,14 +35,16 @@ class InputEvent(Event):
     # def __str__(self):
         # return '%s, char=%s' % (self.name, self.char)
 
+
+class ModifierAppliedEvent(Event):
+    def __init__(self, modifier):
+        self.name = "Modifier applied event"
+        self.modifier = modifier
+
+
 class InitializeEvent(Event):
     def __init__(self):
         self.name = "Initialize event"
-
-
-class GameOverEvent(Event):
-    def __init__(self):
-        self.name = "Game over event"
 
 
 class StateChangeEvent(Event):
@@ -71,8 +73,8 @@ class EventBus(object):
             del self.listeners[listener]
 
     def post(self, event):
-        if not isinstance(event, TickEvent):
+        # if not isinstance(event, TickEvent):
             # debug print the event if it is not TickEvent
-            print(str(event))
+            # print(str(event))
         for listener in self.listeners.keys():
             listener.notify(event)

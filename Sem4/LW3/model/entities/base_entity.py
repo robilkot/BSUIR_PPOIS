@@ -22,7 +22,6 @@ class BaseEntity:
         surface.blit(self.sprite, origin)
 
     def move(self, surface: Surface):
-        # todo: time provider? or move to physics
         self.position = wrap_position(self.position + self.velocity, surface)
 
     def collides_with(self, other_obj: BaseEntity) -> bool:

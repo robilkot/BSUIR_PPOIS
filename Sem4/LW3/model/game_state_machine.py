@@ -1,11 +1,10 @@
 # State machine constants for the class below
 STATE_MENU = 1
 STATE_HELP = 2
-STATE_ABOUT = 3
-STATE_PLAY = 4
-STATE_SAVE_RECORD = 5
-STATE_RECORDS = 6
-STATE_GAME_OVER = 7
+STATE_PLAY = 3
+STATE_SAVE_RECORD = 4
+STATE_RECORDS = 5
+STATE_GAME_OVER = 6
 
 
 # Stack-based navigation system
