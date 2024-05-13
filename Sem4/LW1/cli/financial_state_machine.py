@@ -85,6 +85,10 @@ class FinancialStateMachine(StateMachine):
         self.__selected_index: int = 0
         super().__init__()
 
+    def run(self):
+        while True:
+            self.move_next(input())
+
     def navigating_backwards(self, input_: str) -> bool:
         return input_ == 'q'
 
@@ -204,7 +208,8 @@ class FinancialStateMachine(StateMachine):
         input_pin: int = helper.input_numeric("PIN")
 
         try:
-            self.__finances_service.withdraw(self.__selected_card.card_number, input_amount, input_pin)
+            self.__finances_service.withdraw(self.__selected_bank.name, self.__selected_card.card_number,
+                                             input_amount, input_pin)
             print("Withdrawal successful")
         except FinanceException as e:
             print(str(e))
@@ -217,7 +222,8 @@ class FinancialStateMachine(StateMachine):
         input_pin: int = helper.input_numeric("PIN")
 
         try:
-            balance: int = self.__finances_service.get_balance(self.__selected_card.card_number, input_pin)
+            balance: int = self.__finances_service.get_balance(self.__selected_bank.name,
+                                                               self.__selected_card.card_number, input_pin)
             print(f"Balance: {balance}")
         except FinanceException as e:
             print(str(e))
@@ -228,7 +234,7 @@ class FinancialStateMachine(StateMachine):
         input_amount: int = helper.input_numeric("deposit amount")
 
         try:
-            self.__finances_service.deposit(self.__selected_card.card_number, input_amount)
+            self.__finances_service.deposit(self.__selected_bank.name, self.__selected_card.card_number, input_amount)
         except FinanceException as fe:
             print(str(fe))
         except ValueError as e:
@@ -241,7 +247,8 @@ class FinancialStateMachine(StateMachine):
         input_pin: int = helper.input_numeric("PIN")
 
         try:
-            self.__finances_service.pay(self.__selected_card.card_number, input_amount, input_pin)
+            self.__finances_service.pay(self.__selected_bank.name, self.__selected_card.card_number,
+                                        input_amount, input_pin)
         except FinanceException as fe:
             print(str(fe))
         except ValueError as e:
@@ -255,8 +262,8 @@ class FinancialStateMachine(StateMachine):
         input_pin: int = helper.input_numeric("PIN")
 
         try:
-            self.__finances_service.transfer(self.__selected_bank.name, self.__selected_card.card_number, input_receiver,
-                                             input_pin, input_amount)
+            self.__finances_service.transfer(self.__selected_bank.name, self.__selected_card.card_number,
+                                             input_receiver, input_pin, input_amount)
         except FinanceException as fe:
             print(str(fe))
         except ValueError as e:

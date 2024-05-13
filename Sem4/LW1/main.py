@@ -7,5 +7,4 @@ finances_service = FinancesService(repository)
 
 state_machine = FinancialStateMachine(finances_service)
 
-while True:
-    state_machine.move_next(input())
+state_machine.run()

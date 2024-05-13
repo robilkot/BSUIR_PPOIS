@@ -23,7 +23,11 @@ class FinancesService:
         return bank
 
     def create_bank(self, bank_name: str) -> Bank:
-        # TODO: check if exists with same name
+        bank = next((x for x in self.__banks if x.name == bank_name), None)
+
+        if bank is not None:
+            raise ValueError(f"Bank with name {bank_name} already exists")
+
         new_bank = Bank(bank_name)
         self.__banks.append(new_bank)
 
@@ -56,41 +60,37 @@ class FinancesService:
 
         return new_card
 
-    def remove_card(self, bank_name: str, card_number: int):
+    def remove_card(self, bank_name: str, card_number: int) -> None:
         bank = self.get_bank(bank_name)
         to_remove = bank.get_card(card_number)
         bank.remove_card(to_remove)
 
-    def update_card_pin(self):
-        # todo
-        pass
+    def withdraw(self, bank_name: str, card_number: int, amount: int, card_pin: int) -> None:
+        card = self.get_card(bank_name, card_number)
+        card.withdraw(amount, card_pin)
 
-    def withdraw(self, card_number: int, amount: int, card_pin: int):
-        # todo
-        pass
+    def get_balance(self, bank_name: str, card_number: int, card_pin: int) -> int:
+        card = self.get_card(bank_name, card_number)
+        return card.get_balance(card_pin)
 
-    def get_balance(self, card_number: int, card_pin: int):
-        # todo
-        pass
+    def deposit(self, bank_name: str, card_number: int, amount: int) -> None:
+        card = self.get_card(bank_name, card_number)
+        card.deposit(amount)
 
-    def deposit(self, card_number: int, amount: int):
-        # todo
-        pass
+    def pay(self, bank_name: str, card_number: int, amount: int, card_pin: int) -> None:
+        card = self.get_card(bank_name, card_number)
+        card.pay(amount, card_pin)
 
-    def pay(self, card_number: int, amount: int, card_pin: int):
-        # todo
-        pass
-
-    def set_limit(self, bank_name: str, card_number: int, amount: int, card_pin: int):
+    def set_limit(self, bank_name: str, card_number: int, amount: int, card_pin: int) -> None:
         card = self.get_card(bank_name, card_number)
         card.set_limit(card_pin, amount)
 
-    def set_pin(self, bank_name: str, card_number: int, new_pin: int):
+    def set_pin(self, bank_name: str, card_number: int, new_pin: int) -> None:
         card = self.get_card(bank_name, card_number)
         card.set_pin(new_pin)
 
     def transfer(self, bank_name: str, sender_card_number: int, receiver_card_number: int,
-                 pin: int, amount: int):
+                 pin: int, amount: int) -> None:
         bank = self.get_bank(bank_name)
 
         sender_card = bank.get_card(sender_card_number)
@@ -98,7 +98,7 @@ class FinancesService:
 
         bank.transfer(sender_card, receiver_card, pin, amount)
 
-    def toggle_block(self, bank_name: str, card_number: int):
+    def toggle_block(self, bank_name: str, card_number: int) -> None:
         card = self.get_card(bank_name, card_number)
 
         if card.is_blocked():
@@ -106,11 +106,11 @@ class FinancesService:
         else:
             card.block()
 
-    def init_data(self):
+    def init_data(self) -> None:
         try:
             self.__banks = self.__repository.load()
         except RepositoryException:
             print("Couldn't load existing data. Using default values")
 
-    def commit_changes(self):
+    def commit_changes(self) -> None:
         self.__repository.save(self.__banks)
