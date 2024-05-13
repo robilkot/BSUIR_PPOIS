@@ -1,14 +1,11 @@
 from statemachine import State
 from statemachine import StateMachine
 
-from typing import Optional
-
-from finances.bank import Bank
-from finances.card_owner import CardOwner
-from finances.credit_card import CreditCard
-from repository.interfaces import Repository
-from repository.exceptions import RepositoryException
-from finances.finance_exceptions import FinanceException
+from model.entities.bank import Bank
+from model.entities.card_owner import CardOwner
+from model.entities.credit_card import CreditCard
+from model.services.finances_service import FinancesService
+from model.entities.finance_exceptions import FinanceException
 import helper
 
 
@@ -81,22 +78,11 @@ class FinancialStateMachine(StateMachine):
             | view_banks.to.itself(internal=True)
     )
 
-    def __init__(self, repository: Repository):
-        self.repository: Repository = repository
-
-        try:
-            loaded_state = repository.load()
-            self.selected_index: Optional[int] = loaded_state[0]
-            self.selected_bank: Optional[Bank] = loaded_state[1]
-            self.selected_card: Optional[CreditCard] = loaded_state[2]
-            self.banks: list[Bank] = loaded_state[3]
-        except RepositoryException:
-            print("Loading default values")
-            self.selected_index: Optional[int] = None
-            self.selected_bank: Optional[Bank] = None
-            self.selected_card: Optional[CreditCard] = None
-            self.banks: list[Bank] = []
-
+    def __init__(self, finances_service: FinancesService):
+        self.__finances_service: FinancesService = finances_service
+        self.__selected_bank: Bank | None = None
+        self.__selected_card: CreditCard | None = None
+        self.__selected_index: int = 0
         super().__init__()
 
     def navigating_backwards(self, input_: str) -> bool:
@@ -134,77 +120,83 @@ class FinancialStateMachine(StateMachine):
 
     def navigating_by_index(self, input_: str) -> bool:
         if input_.isnumeric():
-            self.selected_index = int(input_)
+            self.__selected_index = int(input_)
             return True
         return False
 
     def on_enter_view_banks(self) -> None:
-        self.selected_bank = None
+        self.__selected_bank = None
         print("List of all banks.\nPress q to exit, c to add new bank, number to view bank")
-        for i in range(len(self.banks)):
-            print(f"{i} - {self.banks[i].name}")
+        banks = self.__finances_service.get_banks()
+
+        for i, bank in enumerate(banks):
+            print(f"{i} - {bank.name}")
 
     def on_enter_create_bank(self) -> None:
-        new_bank = Bank(input("Input bank name"))
-        self.banks.append(new_bank)
-        print("Bank created")
-        self.move_next()
+        bank_name = input("Input bank name")
+
+        try:
+            _ = self.__finances_service.create_bank(bank_name)
+            print("Bank created")
+        except Exception as e:
+            print(str(e))
+        finally:
+            self.move_next()
 
     def on_enter_create_card(self) -> None:
-        card_number = input("Input card number")
+        card_number = helper.input_numeric("Input card number")
         card_owner = CardOwner('Sample name', 'Sample address', None, 'Sample phone')
         card_pin: int = helper.input_numeric("PIN")
 
         try:
-            new_card = CreditCard(card_number, card_owner, card_pin, False)
-            self.selected_bank.add_card(new_card)
+            _ = self.__finances_service.create_card(self.__selected_bank.name, card_number, card_owner, card_pin)
             print("Card created")
-        except ValueError as e:
+        except Exception as e:
             print(str(e))
         finally:
             self.move_next()
 
     def on_enter_view_card(self) -> None:
         try:
-            if self.selected_card is None:
-                self.selected_card = self.selected_bank.get_cards()[self.selected_index]
+            if self.__selected_card is None:
+                self.__selected_card = self.__finances_service.get_cards(self.__selected_bank.name)[self.__selected_index]
 
             print("Card information.\nPress q to return, bal to check balance, trs to transfer,\n"
                   "wdr to withdraw, Pay to pay, blc to toggle block of card,\n"
                   "dep to deposit, pin to change pin, lim to change limit, del to delete card")
-            print(self.selected_card.card_number)
-            print(self.selected_card.owner.name)
-            if self.selected_card.is_blocked():
+            print(self.__selected_card.card_number)
+            print(self.__selected_card.owner.name)
+            if self.__selected_card.is_blocked():
                 print("BLOCKED")
         except IndexError:
             print("Invalid index")
             self.move_next('q')
 
     def on_enter_view_bank(self) -> None:
-        self.selected_card = None
+        self.__selected_card = None
         try:
-            if self.selected_bank is None:
-                self.selected_bank = self.banks[self.selected_index]
+            if self.__selected_bank is None:
+                self.__selected_bank = self.__finances_service.get_banks()[self.__selected_index]
 
-            print(f"{self.selected_bank.name} information.\nPress q to return, d to delete bank,\n"
+            print(f"{self.__selected_bank.name} information.\nPress q to return, d to delete bank,\n"
                   f"c to add new card, number to view card")
-            cards = self.selected_bank.get_cards()
-            for i in range(len(cards)):
-                print(f"{i} - {cards[i].card_number}; {cards[i].owner.name}")
+            cards = self.__finances_service.get_cards(self.__selected_bank.name)
+            for i, card in enumerate(cards):
+                print(f"{i} - {card.card_number}; {card.owner.name}")
         except IndexError:
             print("Invalid index")
             self.move_next('q')
 
     def on_enter_delete_bank(self) -> None:
         print("Deleting bank")
-        self.banks.remove(self.selected_bank)
-        self.selected_bank = None
+        self.__finances_service.remove_bank(self.__selected_bank.name)
+        self.__selected_bank = None
         self.move_next()
 
     def on_enter_delete_card(self) -> None:
         print("Deleting card")
-        self.selected_bank.remove_card(self.selected_card)
-        self.selected_card = None
+        self.__finances_service.remove_card(self.__selected_bank.name, self.__selected_card.card_number)
+        self.__selected_card = None
         self.move_next()
 
     def on_enter_withdraw(self) -> None:
@@ -212,7 +204,7 @@ class FinancialStateMachine(StateMachine):
         input_pin: int = helper.input_numeric("PIN")
 
         try:
-            self.selected_card.withdraw(input_amount, input_pin)
+            self.__finances_service.withdraw(self.__selected_card.card_number, input_amount, input_pin)
             print("Withdrawal successful")
         except FinanceException as e:
             print(str(e))
@@ -225,7 +217,7 @@ class FinancialStateMachine(StateMachine):
         input_pin: int = helper.input_numeric("PIN")
 
         try:
-            balance: int = self.selected_card.get_balance(input_pin)
+            balance: int = self.__finances_service.get_balance(self.__selected_card.card_number, input_pin)
             print(f"Balance: {balance}")
         except FinanceException as e:
             print(str(e))
@@ -236,7 +228,7 @@ class FinancialStateMachine(StateMachine):
         input_amount: int = helper.input_numeric("deposit amount")
 
         try:
-            self.selected_card.deposit(input_amount)
+            self.__finances_service.deposit(self.__selected_card.card_number, input_amount)
         except FinanceException as fe:
             print(str(fe))
         except ValueError as e:
@@ -249,7 +241,7 @@ class FinancialStateMachine(StateMachine):
         input_pin: int = helper.input_numeric("PIN")
 
         try:
-            self.selected_card.pay(input_amount, input_pin)
+            self.__finances_service.pay(self.__selected_card.card_number, input_amount, input_pin)
         except FinanceException as fe:
             print(str(fe))
         except ValueError as e:
@@ -258,18 +250,13 @@ class FinancialStateMachine(StateMachine):
         self.move_next()
 
     def on_enter_transfer(self) -> None:
-        input_receiver: str = input("receiver card number")
-        receiver_card = next((x for x in self.selected_bank.get_cards() if x.card_number == input_receiver), None)
-        if receiver_card is None:
-            print("No such card found")
-            self.move_next()
-            return
-
+        input_receiver: int = helper.input_numeric("receiver card number")
         input_amount: int = helper.input_numeric("transfer amount")
         input_pin: int = helper.input_numeric("PIN")
 
         try:
-            self.selected_bank.transfer(self.selected_card, receiver_card, input_pin, input_amount)
+            self.__finances_service.transfer(self.__selected_bank.name, self.__selected_card.card_number, input_receiver,
+                                             input_pin, input_amount)
         except FinanceException as fe:
             print(str(fe))
         except ValueError as e:
@@ -278,12 +265,12 @@ class FinancialStateMachine(StateMachine):
         self.move_next()
 
     def on_enter_toggle_block(self) -> None:
-        if self.selected_card.is_blocked():
-            self.selected_card.unblock()
-            print("Card unblocked")
-        else:
-            self.selected_card.block()
+        self.__finances_service.toggle_block(self.__selected_bank.name, self.__selected_card.card_number)
+
+        if self.__selected_card.is_blocked():
             print("Card blocked")
+        else:
+            print("Card unblocked")
 
         self.move_next()
 
@@ -292,7 +279,8 @@ class FinancialStateMachine(StateMachine):
         input_pin: int = helper.input_numeric("PIN")
 
         try:
-            self.selected_card.set_limit(input_amount, input_pin)
+            self.__finances_service.set_limit(self.__selected_bank.name, self.__selected_card.card_number,
+                                              input_amount, input_pin)
         except FinanceException as fe:
             print(str(fe))
         except ValueError as e:
@@ -304,7 +292,7 @@ class FinancialStateMachine(StateMachine):
         input_pin: int = helper.input_numeric("new PIN")
 
         try:
-            self.selected_card.set_pin(input_pin)
+            self.__finances_service.set_pin(self.__selected_bank.name, self.__selected_card.card_number, input_pin)
         except ValueError as e:
             print(str(e))
         finally:
@@ -314,9 +302,6 @@ class FinancialStateMachine(StateMachine):
         print()
 
     def on_enter_exit_(self):
-        print("Saving state and exiting...")
-        self.repository.save([self.selected_index,
-                              self.selected_bank,
-                              self.selected_card,
-                              self.banks])
+        print("Goodbye.")
+        self.__finances_service.commit_changes()
         exit()

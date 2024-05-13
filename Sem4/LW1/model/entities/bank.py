@@ -16,6 +16,14 @@ class Bank:
     def remove_card(self, card: CreditCard) -> None:
         self.__cards.remove(card)
 
+    def get_card(self, card_number: int) -> CreditCard:
+        card = next((x for x in self.__cards if x.card_number == card_number), None)
+
+        if card is None:
+            raise ValueError(f"Card with number {card_number} not found")
+
+        return card
+
     def get_cards(self) -> list[CreditCard]:
         return self.__cards.copy()
 

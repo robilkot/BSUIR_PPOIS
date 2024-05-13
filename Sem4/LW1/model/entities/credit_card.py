@@ -10,7 +10,7 @@ class CreditCard(PaymentMean):
                  owner: CardOwner,
                  pin: int = random.randint(1000, 10000),
                  is_blocked: bool = False):
-        self.card_number: str = card_number
+        self.card_number: int = card_number
         self.owner: CardOwner = owner
         self.__payment_limit: int = 0
         self.__pin: int = 0

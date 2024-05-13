@@ -5,8 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a87bfc6-26df-4b51-abb4-689e00aff0d5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/LW1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/LW1.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/finances/bank.py" beforeDir="false" afterPath="$PROJECT_DIR$/finances/bank.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finances/bank.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/entities/bank.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finances/card_owner.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/entities/card_owner.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finances/credit_card.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/entities/credit_card.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finances/finance_exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/entities/finance_exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finances/interfaces.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/entities/interfaces.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finances/transaction.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/entities/transaction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/financial_state_machine.py" beforeDir="false" afterPath="$PROJECT_DIR$/cli/financial_state_machine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repository/exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/repository/exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repository/file_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/repository/file_repository.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repository/interfaces.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/repository/interfaces.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit_tests/bank_unit_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/unit_tests/bank_unit_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit_tests/credit_card_unit_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/unit_tests/credit_card_unit_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../LW3/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../LW3/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +41,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -38,36 +55,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python tests.Python tests in bank_unit_test.py.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests in credit_card_unit_test.py.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests in unit_tests.py.executor&quot;: &quot;Run&quot;,
-    &quot;Python.credit_card.executor&quot;: &quot;Run&quot;,
-    &quot;Python.finance.executor&quot;: &quot;Run&quot;,
-    &quot;Python.financial_state_machine.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.transaction.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/work/BSUIR/PPOIS/Sem4/LW1&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.uml&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python tests.Python tests for bank_unit_test.TestBank.executor": "Run",
+    "Python tests.Python tests for credit_card_unit_test.TestCreditCard.executor": "Run",
+    "Python tests.Python tests in bank_unit_test.py.executor": "Run",
+    "Python tests.Python tests in credit_card_unit_test.py.executor": "Run",
+    "Python tests.Python tests in unit_tests.py.executor": "Run",
+    "Python.credit_card.executor": "Run",
+    "Python.finance.executor": "Run",
+    "Python.financial_state_machine.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.transaction.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/work/BSUIR/PPOIS/Sem4/LW3/.venv/Scripts/python.exe",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\work\BSUIR\PPOIS\Sem4\LW1\model\services" />
+      <recent name="D:\work\BSUIR\PPOIS\Sem4\LW1\model" />
+      <recent name="D:\work\BSUIR\PPOIS\Sem4\LW1\cli" />
       <recent name="D:\work\BSUIR\PPOIS\Sem4\LW1\finances" />
       <recent name="D:\work\BSUIR\PPOIS\Sem4\LW1\unit_tests" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="LW1" />
       <option name="ENV_FILES" value="" />
@@ -77,8 +99,9 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.12 (LW1)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
@@ -91,6 +114,44 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for bank_unit_test.TestBank" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="LW1" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/unit_tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;bank_unit_test.TestBank&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for credit_card_unit_test.TestCreditCard" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="LW1" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/unit_tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;credit_card_unit_test.TestCreditCard&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Python tests for credit_card_unit_test.TestCreditCard" />
+        <item itemvalue="Python tests.Python tests for bank_unit_test.TestBank" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -117,6 +178,9 @@
       <workItem from="1708859148089" duration="202000" />
       <workItem from="1709014291980" duration="5091000" />
       <workItem from="1709402795842" duration="9000" />
+      <workItem from="1715588035109" duration="3068000" />
+      <workItem from="1715610048336" duration="201000" />
+      <workItem from="1715610254192" duration="2922000" />
     </task>
     <servers />
   </component>
@@ -125,9 +189,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/LW1$credit_card.coverage" NAME="credit_card Coverage Results" MODIFIED="1708628246284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/finances" />
-    <SUITE FILE_PATH="coverage/LW1$main.coverage" NAME="main Coverage Results" MODIFIED="1709023496821" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/LW1$main.coverage" NAME="main Coverage Results" MODIFIED="1715613153361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LW1$financial_state_machine.coverage" NAME="financial_state_machine Coverage Results" MODIFIED="1708629326237" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/LW1$.coverage" NAME=" Coverage Results" MODIFIED="1709021299243" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/unit_tests" />
+    <SUITE FILE_PATH="coverage/LW1$.coverage" NAME=" Coverage Results" MODIFIED="1715613132832" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/unit_tests" />
     <SUITE FILE_PATH="coverage/LW1$finance.coverage" NAME="finance Coverage Results" MODIFIED="1708607230855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LW1$transaction.coverage" NAME="transaction Coverage Results" MODIFIED="1708607641333" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
