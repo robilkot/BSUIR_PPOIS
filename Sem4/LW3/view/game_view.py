@@ -217,7 +217,7 @@ class AssteroidsView(EventListener):
     def initialize(self):
         pygame.init()
         pygame.mixer.music.load("assets/sounds/background.mp3")
-        pygame.mixer.music.play(loops=True)
+        pygame.mixer.music.play(loops=-1)
         pygame.font.init()
         self.screen = pygame.display.get_surface()
         self.clock = pygame.time.Clock()
