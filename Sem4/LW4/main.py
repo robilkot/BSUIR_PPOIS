@@ -4,10 +4,6 @@ from fastapi import FastAPI, Request, Depends
 from fastapi.staticfiles import StaticFiles
 
 sys.path.insert(1, 'D://work//BSUIR//PPOIS//Sem4//LW1//')
-from model.entities.bank import *
-from model.entities.credit_card import *
-from model.entities.card_owner import *
-from model.entities.finance_exceptions import *
 from routers import banks
 
 

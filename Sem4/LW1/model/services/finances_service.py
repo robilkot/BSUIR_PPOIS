@@ -49,6 +49,9 @@ class FinancesService:
         return bank.get_cards()
 
     def create_card(self, bank_name: str, card_number: int, card_owner: CardOwner, card_pin: int) -> CreditCard:
+        if card_number <= 0:
+            raise ValueError(f"Card number cannot be non-positive")
+
         bank = self.get_bank(bank_name)
 
         existing_card = next((x for x in bank.get_cards() if x.card_number == card_number), None)

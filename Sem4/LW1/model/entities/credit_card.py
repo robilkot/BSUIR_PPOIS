@@ -72,6 +72,7 @@ class CreditCard(PaymentMean):
 
     def unblock(self) -> None:
         self.__is_blocked = False
+        self.__wrong_pin_inputs = 0
 
     def set_pin(self, new_pin: int) -> None:
         if new_pin < 1000 or new_pin >= 10000:
