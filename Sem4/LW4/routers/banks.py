@@ -5,8 +5,6 @@ from starlette.responses import RedirectResponse
 from starlette.templating import Jinja2Templates
 
 from internal.services_provider import ServiceProvider
-from models.bank import Bank
-from models.credit_card import CreditCard
 
 
 router = APIRouter(
